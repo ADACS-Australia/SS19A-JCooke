@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: ng_dwf
+    ports:
+      - "8060:8000"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./static:/static
+    depends_on:
+      - web
+  web:
+    build: ./
+    container_name: dg_dwf
+    command: >
+      bash -c "pip install gunicorn
+      && python manage.py makemigrations
+      && python manage.py migrate
+      && python manage.py collectstatic --noinput
+      && gunicorn dwfui.wsgi -b 0.0.0.0:8000"
+    ports:
+      - "8000"
+    volumes:
+      - ./:/code
+      - ./static:/static
+
