@@ -1,0 +1,23 @@
+{% extends 'dwfcommon/base/base.html' %}
+{% load static %}
+
+{% block page_header %}
+    About DWF
+{% endblock page_header %}
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static 'dwfcommon/style/about.css' %}"/>
+{% endblock additional_styles %}
+
+{% block content %}
+    <div class="about row">
+        <div class="col-md-12">
+            <div class="section text-center project-logo">
+                <img src="{% static 'dwfcommon/image/logo_dwf_nobkg.png' %}" alt="DWF Logo"/>
+            </div>
+            <div class="section text-justify">
+                Deeper, Wider, Faster
+            </div>
+        </div>
+    </div>
+{% endblock content %}

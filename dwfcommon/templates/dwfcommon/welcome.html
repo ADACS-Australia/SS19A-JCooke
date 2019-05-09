@@ -1,0 +1,23 @@
+{% extends 'dwfcommon/base/base.html' %}
+{% load static %}
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static 'dwfcommon/style/welcome.css' %}"/>
+{% endblock additional_styles %}
+
+{% block main_content %}
+    <div class="container">
+        <div class="welcome row">
+            <div class="col col-md-12">
+                <div class="section project-logo row">
+                    <div class="col col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-sm-6 offset-sm-3 col-12">
+                        <img src="{% static 'dwfcommon/image/logo_dwf_nobkg.png' %}" alt="DWF LOGO"/>
+                    </div>
+                </div>
+                <div class="slogan text-center">
+                    Deeper, Wider, Faster
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main_content %}
