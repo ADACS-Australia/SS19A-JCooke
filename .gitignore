@@ -111,3 +111,4 @@ dwfui/settings/local.py
 ADACS.py
 static-files/*
 *.sqlite3
+dwfui/logs/
