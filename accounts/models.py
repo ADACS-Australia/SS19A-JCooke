@@ -9,13 +9,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-class User(AbstractUser):
-    """
-    User model extending AbstractUser
-    """
-    def __init__(self, *args, **kwargs):
-        super(User, self).__init__(*args, **kwargs)
-
+class Role(models.Model):
     CORE_MEMBER = 'Core Member'
     COLLABORATOR = 'Collaborator'
     PUBLIC = 'Public'
@@ -24,7 +18,15 @@ class User(AbstractUser):
         (COLLABORATOR, COLLABORATOR),
         (PUBLIC, PUBLIC),
     ]
-    role = models.CharField(max_length=5, choices=ROLE_CHOICES, default=PUBLIC, blank=False)
+    name = models.CharField(max_length=55, choices=ROLE_CHOICES, default=PUBLIC, blank=False, unique=True)
+
+
+class User(AbstractUser):
+    """
+    User model extending AbstractUser
+    """
+    def __init__(self, *args, **kwargs):
+        super(User, self).__init__(*args, **kwargs)
 
     UNVERIFIED = 'Unverified'
     VERIFIED = 'Verified'
@@ -43,14 +45,22 @@ class User(AbstractUser):
         Checks whether a user is an admin or not
         :return: True or False
         """
-        return self.role == self.CORE_MEMBER
+        try:
+            role = UserRole.objects.get(user=self).role
+            return role.name in [Role.CORE_MEMBER]
+        except UserRole.DoesNotExist:
+            return False
 
     def is_collaborator(self):
         """
         Checks whether a user is a core member or not
         :return: True or False
         """
-        return self.role == self.COLLABORATOR
+        try:
+            role = UserRole.objects.get(user=self).role
+            return role.name in [Role.CORE_MEMBER, Role.COLLABORATOR]
+        except UserRole.DoesNotExist:
+            return False
 
     def display_name(self):
         """
@@ -70,6 +80,16 @@ class User(AbstractUser):
                 first_name=self.first_name,
                 last_name=self.last_name,
             ),
+        )
+
+
+class UserRole(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+
+    class Meta(object):
+        unique_together = (
+            ('user', 'role', ),
         )
 
 
