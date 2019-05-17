@@ -28,6 +28,7 @@ class User(AbstractUser):
     """
     User model extending AbstractUser
     """
+
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
 
@@ -106,8 +107,40 @@ class UserRole(models.Model):
 
     class Meta(object):
         unique_together = (
-            ('user', 'role', ),
+            ('user', 'role',),
         )
+
+    def __str__(self):
+        return u'%s - %s' % (self.user, self.role)
+
+
+class UserRoleRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='request_user')
+    current_role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='request_current_role', blank=False,
+                                     null=False)
+    intended_role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='request_intended_role', blank=False,
+                                      null=False)
+    request_time = models.DateTimeField(auto_now_add=True)
+
+    ACTION_REQUIRED = 'Action Required'
+    APPROVED = 'Approved'
+    REJECTED = 'Rejected'
+    DELETED = 'Deleted'
+
+    STATUS_CHOICES = [
+        (ACTION_REQUIRED, ACTION_REQUIRED),
+        (APPROVED, APPROVED),
+        (REJECTED, REJECTED),
+        (DELETED, DELETED),
+    ]
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, blank=False, default=ACTION_REQUIRED)
+    approved_time = models.DateTimeField(blank=True, null=True)
+    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='request_approved_by', null=True,
+                                    blank=True)
+
+    def __str__(self):
+        return u'%s (from %s to %s)' % (self.user, self.current_role, self.intended_role)
 
 
 class Verification(models.Model):

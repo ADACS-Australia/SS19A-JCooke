@@ -11,6 +11,7 @@ from six.moves.urllib import parse
 
 from .forms.profile import EditProfileForm
 from .forms.registation import RegistrationForm
+from .forms.role_change_request import RoleChangeRequestForm
 from . import utility
 from .models import User
 
@@ -116,6 +117,46 @@ def profile(request):
             'form': form,
             'data': data,
             'submit_text': 'Update',
+        },
+    )
+
+
+@login_required
+def request_change_role(request):
+    """
+    View to request change of role
+    :param request:
+    :return:
+    """
+
+    data = {}
+    if request.method == 'POST':
+        form = RoleChangeRequestForm(request.POST, instance=request.user)
+        if form.is_valid():
+            data = form.cleaned_data
+            form.save()
+            messages.success(request, 'Information successfully recorded', 'alert alert-success')
+            return render(
+                request,
+                "accounts/role_change.html",
+                {
+                    'form': form,
+                    'type': 'update_profile_success',
+                    'data': data,
+                },
+            )
+        else:
+            messages.error(request, 'Please correct the error(s) below.', 'alert alert-warning')
+    else:
+        form = RoleChangeRequestForm(instance=request.user)
+
+    return render(
+        request,
+        "accounts/role_change.html",
+        {
+            'form': form,
+            'data': data,
+            'submit_text': 'Submit Request',
         },
     )
 

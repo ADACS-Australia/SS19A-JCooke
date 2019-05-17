@@ -8,7 +8,7 @@ from django.contrib.auth import views as auth_views
 
 from .forms.password_reset import PasswordResetCustomForm
 from .forms.password_change import PasswordChangeCustomForm
-from .views import registration, profile, verify
+from .views import registration, profile, verify, request_change_role
 
 # defines the URLs for the accounts app
 urlpatterns = [
@@ -49,4 +49,5 @@ urlpatterns = [
              template_name='accounts/registration/password_reset_complete.html',
          ), name='password_reset_complete'),
     path('verify/', verify, name='verify_account'),
+    path('request_change_role/', request_change_role, name='request_change_role'),
 ]

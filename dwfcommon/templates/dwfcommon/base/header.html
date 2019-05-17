@@ -35,13 +35,16 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfileLink"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {% if user.first_name %}{{ user.first_name }}{% else %}Profile{% endif %} <i
+                            {% if user.first_name %}{{ user.first_name }}{% else %}Profile{% endif %}
+                            {% if user.user_role and user.user_role != 'Public' %}({{ user.user_role }}) {% endif %}<i
                                 class="fas fa-user-cog"></i></a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownProfileLink">
                             <a class="dropdown-item" href="{% url 'profile' %}">Update Profile <i
                                     class="fas fa-user-edit"></i></a>
                             <a class="dropdown-item" href="{% url 'password_change' %}">Change Password <i
                                     class="fas fa-key"></i></a>
+                            <a class="dropdown-item" href="{% url 'request_change_role' %}">Change Role <i
+                                    class="fas fa-user-tag"></i></a>
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout <i
                                     class="fas fa-sign-out-alt"></i></a>
                         </div>
@@ -55,6 +58,8 @@
                                 <a class="dropdown-item" href="{% url 'all_jobs' %}">All Launched Jobs</a>
                                 <a class="dropdown-item" href="{% url 'all_drafts' %}">All Draft Jobs</a>
                                 <a class="dropdown-item" href="{% url 'all_deleted_jobs' %}">All Deleted Jobs</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'all_deleted_jobs' %}">Role Change Requests</a>
                             </div>
                         </li>
                     {% endif %}
