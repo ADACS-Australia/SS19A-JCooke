@@ -91,3 +91,14 @@ def get_information(token):
     except Exception as e:
         logger.exception(e)  # should notify admins via email
         raise
+
+
+def get_admins():
+    """
+    Returns a list of admins from the User table
+    :return: a list of Users
+    """
+
+    from .models import User, Role
+
+    return User.objects.filter(user_role_user__role__name=Role.CORE_MEMBER)

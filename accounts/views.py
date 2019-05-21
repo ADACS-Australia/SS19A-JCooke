@@ -131,7 +131,7 @@ def request_change_role(request):
 
     data = {}
     if request.method == 'POST':
-        form = RoleChangeRequestForm(request.POST, instance=request.user)
+        form = RoleChangeRequestForm(request.POST, user=request.user)
         if form.is_valid():
             data = form.cleaned_data
             form.save()
@@ -148,7 +148,7 @@ def request_change_role(request):
         else:
             messages.error(request, 'Please correct the error(s) below.', 'alert alert-warning')
     else:
-        form = RoleChangeRequestForm(instance=request.user)
+        form = RoleChangeRequestForm(user=request.user)
 
     return render(
         request,
@@ -199,10 +199,10 @@ def verify(request):
                         message='The requested user account to verify does not exist',
                     )
         except ValueError as e:
-                data.update(
-                    success=False,
-                    message=e if e else 'Invalid verification code',
-                )
+            data.update(
+                success=False,
+                message=e if e else 'Invalid verification code',
+            )
     else:
         data.update(
             success=False,
