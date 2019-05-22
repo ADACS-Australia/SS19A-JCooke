@@ -37,3 +37,13 @@ def error_404_view(request, exception):
     """
     data = {"name": "not used yet"}
     return render(request, 'dwfcommon/error_404.html', data)
+
+
+def error_403_view(request, exception):
+    """
+    Render custom 403 page.
+    :param request: Django request object.
+    :return: Rendered template
+    """
+    data = {"name": "not used yet"}
+    return render(request, 'dwfcommon/error_403.html', data)

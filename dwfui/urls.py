@@ -32,3 +32,6 @@ urlpatterns = [
         )
     )
 ]
+
+handler404 = 'dwfcommon.views.error_404_view'
+handler403 = 'dwfcommon.views.error_403_view'

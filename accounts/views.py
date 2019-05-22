@@ -12,6 +12,7 @@ from six.moves.urllib import parse
 from .forms.profile import EditProfileForm
 from .forms.registation import RegistrationForm
 from .forms.role_change_request import RoleChangeRequestForm
+from .decorators import admin_or_system_admin_required
 from . import utility
 from .models import User
 
@@ -138,7 +139,7 @@ def request_change_role(request):
             messages.success(request, 'Information successfully recorded', 'alert alert-success')
             return render(
                 request,
-                "accounts/role_change.html",
+                "accounts/role_change/role_change.html",
                 {
                     'form': form,
                     'type': 'update_profile_success',
@@ -152,11 +153,23 @@ def request_change_role(request):
 
     return render(
         request,
-        "accounts/role_change.html",
+        "accounts/role_change/role_change.html",
         {
             'form': form,
             'data': data,
             'submit_text': 'Submit Request',
+        },
+    )
+
+
+@login_required
+@admin_or_system_admin_required
+def view_change_role_requests(request):
+    return render(
+        request,
+        "accounts/role_change/view_role_change_requests.html",
+        {
+            'data': None,
         },
     )
 
