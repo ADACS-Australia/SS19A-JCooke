@@ -10,10 +10,10 @@ from .mailer.actions import email_role_change_request_to_admins
 
 
 @receiver(post_save, sender=UserRoleRequest, dispatch_uid='role_change_request_notify_admin')
-def role_change_request_notify_admin(sender, instance, update_fields, raw=False, **kwargs):
+def role_change_request_notify_admin(sender, instance, update_fields, raw=False, created=True, **kwargs):
     # Don't send the emails if:
     # * This is a raw save
     if not raw:
         # check whether we need to send the email to admins
-        if instance.status in [UserRoleRequest.ACTION_REQUIRED, ]:
+        if created and instance.status in [UserRoleRequest.ACTION_REQUIRED, ]:
             email_role_change_request_to_admins(instance)

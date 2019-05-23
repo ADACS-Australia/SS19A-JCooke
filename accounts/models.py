@@ -135,8 +135,9 @@ class UserRoleRequest(models.Model):
     ]
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, blank=False, default=ACTION_REQUIRED)
-    approved_time = models.DateTimeField(blank=True, null=True)
-    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='request_approved_by', null=True,
+    response = models.TextField(null=True, blank=True)
+    action_time = models.DateTimeField(blank=True, null=True)
+    actioned_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='request_approved_by', null=True,
                                     blank=True)
 
     def __str__(self):

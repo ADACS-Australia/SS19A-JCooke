@@ -12,9 +12,13 @@ from six.moves.urllib import parse
 from .forms.profile import EditProfileForm
 from .forms.registation import RegistrationForm
 from .forms.role_change_request import RoleChangeRequestForm
+from .forms.role_change_request_action import RoleChangeRequestActionForm
 from .decorators import admin_or_system_admin_required
 from . import utility
-from .models import User
+from .models import (
+    User,
+    UserRoleRequest,
+)
 
 from .mailer import actions
 
@@ -170,6 +174,22 @@ def view_change_role_requests(request):
         "accounts/role_change/view_role_change_requests.html",
         {
             'data': None,
+        },
+    )
+
+
+@login_required
+@admin_or_system_admin_required
+def view_change_role_request(request, request_id=None):
+
+    user_role_request = UserRoleRequest.objects.get(id=request_id)
+    action_form = RoleChangeRequestActionForm(instance=user_role_request)
+
+    return render(
+        request,
+        "accounts/role_change/role_change_request_action.html",
+        {
+            'form': action_form,
         },
     )
 

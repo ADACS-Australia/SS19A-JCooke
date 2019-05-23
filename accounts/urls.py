@@ -8,7 +8,14 @@ from django.contrib.auth import views as auth_views
 
 from .forms.password_reset import PasswordResetCustomForm
 from .forms.password_change import PasswordChangeCustomForm
-from .views import registration, profile, verify, request_change_role, view_change_role_requests
+from .views import (
+    registration,
+    profile,
+    verify,
+    request_change_role,
+    view_change_role_requests,
+    view_change_role_request,
+)
 
 # defines the URLs for the accounts app
 urlpatterns = [
@@ -33,7 +40,6 @@ urlpatterns = [
              email_template_name='accounts/registration/password_reset_email.html',
              subject_template_name='accounts/registration/password_reset_subject.txt',
              html_email_template_name='accounts/registration/password_reset_email_html.html',
-
          ), name='password_reset'),
     path('password_reset/done/',
          auth_views.PasswordResetDoneView.as_view(
@@ -51,4 +57,5 @@ urlpatterns = [
     path('verify/', verify, name='verify_account'),
     path('request_change_role/', request_change_role, name='request_change_role'),
     path('view_change_role_requests/', view_change_role_requests, name='view_change_role_requests'),
+    path('view_change_role_request/<request_id>/', view_change_role_request, name='view_change_role_request'),
 ]
