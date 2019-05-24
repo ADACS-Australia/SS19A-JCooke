@@ -40,3 +40,18 @@ ROLE_CHANGE_REQUEST['message'] = '<p>Dear Core Member: </p>' \
                                  '<p> </p>' \
                                  '<p>Regards, </p>' \
                                  '<p>DWF Team</p>'
+
+ROLE_CHANGED = dict()
+ROLE_CHANGED['subject'] = '[DWF] Role Changed'
+ROLE_CHANGED['message'] = '<p>Dear {{first_name}} {{last_name}}: </p>' \
+                          '<p>Your role in the system has been changed. The details are below: </p> ' \
+                          '<p>Previous Role: {{from_role}} </br>' \
+                          '<p>New Role: {{to_role}} </p>' \
+                          '<p>It is either as a result of a request made by you on the system or by an ' \
+                          'administrator\'s action.</p> ' \
+                          '<p>If you believe that the email has been sent by mistake please report this incident to ' \
+                          '<a href="mailto:jcooke@astro.swin.edu.au" target="_top">jcooke@astro.swin.edu.au</a> ' \
+                          'for investigation. </p>' \
+                          '<p> </p>' \
+                          '<p>Regards, </p>' \
+                          '<p>DWF Team</p>'

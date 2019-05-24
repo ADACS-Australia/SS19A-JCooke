@@ -57,3 +57,26 @@ def email_role_change_request_to_admins(user_role_request):
         template=templates.ROLE_CHANGE_REQUEST['message'],
         context=context,
     ).send_email()
+
+
+def email_role_change_to_user(user_role, from_role):
+    """
+    Sends out email to the user notifying the role change
+    :param user_role: UserRole model instance
+    :param from_role: Role model instance representing user's old role
+    """
+
+    # setting up the context
+    context = {
+        'first_name': user_role.user.first_name,
+        'last_name': user_role.user.last_name,
+        'from_role': from_role.name,
+        'to_role': user_role.role.name,
+    }
+
+    email.Email(
+        subject=templates.ROLE_CHANGED['subject'],
+        to_addresses=[user_role.user.email, ],
+        template=templates.ROLE_CHANGED['message'],
+        context=context,
+    ).send_email()

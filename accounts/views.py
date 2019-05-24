@@ -4,6 +4,7 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -182,14 +183,29 @@ def view_change_role_requests(request):
 @admin_or_system_admin_required
 def view_change_role_request(request, request_id=None):
 
-    user_role_request = UserRoleRequest.objects.get(id=request_id)
-    action_form = RoleChangeRequestActionForm(instance=user_role_request)
+    try:
+        user_role_request = UserRoleRequest.objects.get(id=request_id)
+    except UserRoleRequest.DoesNotExist:
+        raise Http404
+    else:
+        if user_role_request.status == user_role_request.DELETED:
+            raise Http404
+
+    if request.method == 'POST':
+        form = RoleChangeRequestActionForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save(instance=user_role_request)
+        else:
+            messages.error(request, 'Please correct the error(s) below.', 'alert alert-warning')
+    else:
+        form = RoleChangeRequestActionForm(user=request.user)
 
     return render(
         request,
         "accounts/role_change/role_change_request_action.html",
         {
-            'form': action_form,
+            'form': form,
+            'user_role_request': user_role_request,
         },
     )
 

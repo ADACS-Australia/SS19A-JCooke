@@ -102,13 +102,8 @@ class User(AbstractUser):
 
 
 class UserRole(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_role_user', null=False, blank=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_role_user', null=False, blank=False)
     role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='user_role_role', null=False, blank=False)
-
-    class Meta(object):
-        unique_together = (
-            ('user', 'role',),
-        )
 
     def __str__(self):
         return u'%s - %s' % (self.user, self.role)

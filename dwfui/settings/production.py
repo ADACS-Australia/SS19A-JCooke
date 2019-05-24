@@ -26,7 +26,6 @@ LOGIN_REDIRECT_URL = '/' + ROOT_SUBDIRECTORY_PATH
 LOGOUT_REDIRECT_URL = '/' + ROOT_SUBDIRECTORY_PATH
 LOGIN_URL = '/' + ROOT_SUBDIRECTORY_PATH + 'accounts/login'
 
-
 STATIC_URL = '/' + ROOT_SUBDIRECTORY_PATH + 'static/'
 SITE_URL = 'https://supercomputing.swin.edu.au'
 
@@ -36,6 +35,7 @@ DATABASES = {
         'NAME': 'dwf',
         'USER': 'root',
         'PASSWORD': 'your password',
+        'ATOMIC_REQUESTS': True,
     },
 }
 

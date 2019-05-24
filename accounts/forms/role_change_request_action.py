@@ -4,9 +4,13 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from ..models import UserRoleRequest
+from ..models import (
+    UserRoleRequest,
+    UserRole,
+)
 
 
 APPROVE = 'Approve'
@@ -47,7 +51,7 @@ class RoleChangeRequestActionForm(forms.Form):
         label=_('Your Password'),
     )
 
-    def __init__(self, instance=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(RoleChangeRequestActionForm, self).__init__(*args, **kwargs)
 
@@ -56,3 +60,19 @@ class RoleChangeRequestActionForm(forms.Form):
 
         if not self.user.check_password(password):
             raise ValidationError('Incorrect Password')
+
+    def save(self, instance, *args, **kwargs):
+        data = self.cleaned_data
+        instance.actioned_by = self.user
+        instance.action_time = timezone.now()
+        instance.response = data['response']
+        instance.status = data['action']
+        instance.save()
+
+        if data['action'] in [UserRoleRequest.APPROVED, ]:
+            UserRole.objects.update_or_create(
+                user=instance.user,
+                defaults={
+                    'role': instance.intended_role,
+                }
+            )
