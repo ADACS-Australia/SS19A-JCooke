@@ -26,16 +26,19 @@ class TestGetAdmin(TestCase):
         tests where one admin user in the database
         :return: Nothing
         """
-        UserRole.objects.create(
-            user=User.objects.create(
-                username='admin_1',
-                first_name='admin_1_f',
-                last_name='admin_1_l',
-                email='admin_1@localhost',
-            ),
-            role=Role.objects.get(
-                name=Role.CORE_MEMBER,
-            )
+        core_member = Role.objects.get(name=Role.CORE_MEMBER)
+
+        user = User.objects.create(
+            username='admin_1',
+            first_name='admin_1_f',
+            last_name='admin_1_l',
+            email='admin_1@localhost',
+        )
+        UserRole.objects.update_or_create(
+            user=user,
+            defaults={
+                'role': core_member,
+            }
         )
 
         admins = get_admins()
@@ -46,27 +49,33 @@ class TestGetAdmin(TestCase):
         tests where more than admin user in the database
         :return: Nothing
         """
-        UserRole.objects.create(
-            user=User.objects.create(
-                username='admin_1',
-                first_name='admin_1_f',
-                last_name='admin_1_l',
-                email='admin_1@localhost',
-            ),
-            role=Role.objects.get(
-                name=Role.CORE_MEMBER,
-            )
+        core_member = Role.objects.get(name=Role.CORE_MEMBER)
+
+        user = User.objects.create(
+            username='admin_1',
+            first_name='admin_1_f',
+            last_name='admin_1_l',
+            email='admin_1@localhost',
         )
-        UserRole.objects.create(
-            user=User.objects.create(
-                username='admin_2',
-                first_name='admin_2_f',
-                last_name='admin_2_l',
-                email='admin_2@localhost',
-            ),
-            role=Role.objects.get(
-                name=Role.CORE_MEMBER,
-            )
+        UserRole.objects.update_or_create(
+            user=user,
+            defaults={
+                'role': core_member,
+            }
+        )
+
+        user = User.objects.create(
+            username='admin_2',
+            first_name='admin_2_f',
+            last_name='admin_2_l',
+            email='admin_2@localhost',
+        )
+
+        UserRole.objects.update_or_create(
+            user=user,
+            defaults={
+                'role': core_member,
+            }
         )
 
         # Creating a user should automatically create a role
