@@ -33,7 +33,12 @@ def role_change_notify_user(instance, raw=False, **kwargs):
     if not raw:
 
         # check whether we need to send the email to admins
-        old_instance = UserRole.objects.get(id=instance.id)
+        try:
+            old_instance = UserRole.objects.get(id=instance.id)
 
-        if old_instance.role != instance.role:
-            email_role_change_to_user(instance, old_instance.role)
+            if old_instance.role != instance.role:
+                email_role_change_to_user(instance, old_instance.role)
+        except UserRole.DoesNotExist:
+            # If there is no old instance that means it is a new entry.
+            # We don't do anything for it.
+            pass
