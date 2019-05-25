@@ -5,7 +5,10 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 from django.urls import reverse
 
 from . import templates, email
-from ..utility import get_admins
+from ..utility import (
+    get_admins,
+    get_absolute_site_url,
+)
 
 
 def email_verify_request(to_addresses, first_name, last_name, link):
@@ -48,7 +51,7 @@ def email_role_change_request_to_admins(user_role_request):
         'email': user_role_request.user.email,
         'current_role': user_role_request.current_role.name,
         'intended_role': user_role_request.intended_role.name,
-        'link': 'link_to_set',
+        'link': get_absolute_site_url() + reverse('view_change_role_request', args={user_role_request.id}),
     }
 
     email.Email(
