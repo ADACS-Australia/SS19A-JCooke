@@ -117,19 +117,23 @@ class UserRoleRequest(models.Model):
                                       null=False)
     request_time = models.DateTimeField(auto_now_add=True)
 
-    ACTION_REQUIRED = 'Action Required'
-    APPROVED = 'Approved'
-    REJECTED = 'Rejected'
-    DELETED = 'Deleted'
+    ACTION_REQUIRED_DISPLAY = 'Action Required'
+    ACTION_REQUIRED = 100
+    APPROVED_DISPLAY = 'Approved'
+    APPROVED = 200
+    REJECTED_DISPLAY = 'Rejected'
+    REJECTED = 300
+    DELETED_DISPLAY = 'Deleted'
+    DELETED = 500
 
     STATUS_CHOICES = [
-        (ACTION_REQUIRED, ACTION_REQUIRED),
-        (APPROVED, APPROVED),
-        (REJECTED, REJECTED),
-        (DELETED, DELETED),
+        (ACTION_REQUIRED, ACTION_REQUIRED_DISPLAY),
+        (APPROVED, APPROVED_DISPLAY),
+        (REJECTED, REJECTED_DISPLAY),
+        (DELETED, DELETED_DISPLAY),
     ]
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, blank=False, default=ACTION_REQUIRED)
+    status = models.SmallIntegerField(choices=STATUS_CHOICES, blank=False, default=ACTION_REQUIRED)
     response = models.TextField(null=True, blank=True)
     action_time = models.DateTimeField(blank=True, null=True)
     actioned_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='request_approved_by', null=True,

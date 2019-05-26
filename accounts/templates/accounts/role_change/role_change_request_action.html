@@ -26,10 +26,10 @@
             <div class="col col-md-4 text-md-right">Request Time</div>
             <div class="col col-md-8">{{ user_role_request.request_time }}</div>
         </div>
-        {% if user_role_request.status != 'Action Required' %}
+        {% if user_role_request.status != user_role_request.ACTION_REQUIRED %}
             <div class="row field">
                 <div class="col col-md-4 text-md-right">Status</div>
-                <div class="col col-md-8">{{ user_role_request.status }}</div>
+                <div class="col col-md-8">{{ user_role_request.get_status_display }}</div>
             </div>
             <div class="row field">
                 <div class="col col-md-4 text-md-right">Actioned By</div>
@@ -41,7 +41,7 @@
             </div>
         {% endif %}
     </div>
-    {% if user_role_request.status == 'Action Required' %}
+    {% if user_role_request.status == user_role_request.ACTION_REQUIRED %}
         <div class="single-form-wrapper mx-auto">
             {% include 'dwfcommon/snippets/render_form.html' %}
         </div>
