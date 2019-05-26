@@ -2,26 +2,34 @@
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from six.moves.urllib import parse
 
+from . import utility
+from .constants import ROLE_CHANGE_REQUESTS_PER_PAGE
+from .decorators import admin_or_system_admin_required
 from .forms.profile import EditProfileForm
 from .forms.registation import RegistrationForm
 from .forms.role_change_request import RoleChangeRequestForm
 from .forms.role_change_request_action import RoleChangeRequestActionForm
-from .decorators import admin_or_system_admin_required
-from . import utility
 from .models import (
     User,
     UserRoleRequest,
 )
 
 from .mailer import actions
+
+
+logger = logging.getLogger(__name__)
 
 
 def registration(request):
@@ -170,11 +178,18 @@ def request_change_role(request):
 @login_required
 @admin_or_system_admin_required
 def view_change_role_requests(request):
+    user_role_requests_all = UserRoleRequest.objects.filter(~Q(status__in=[UserRoleRequest.DELETED])).order_by('status')
+
+    paginator = Paginator(user_role_requests_all, ROLE_CHANGE_REQUESTS_PER_PAGE)
+
+    page = request.GET.get('page')
+    user_role_requests = paginator.get_page(page)
+
     return render(
         request,
         "accounts/role_change/view_role_change_requests.html",
         {
-            'data': None,
+            'user_role_requests': user_role_requests,
         },
     )
 
@@ -182,7 +197,6 @@ def view_change_role_requests(request):
 @login_required
 @admin_or_system_admin_required
 def view_change_role_request(request, request_id=None):
-
     try:
         user_role_request = UserRoleRequest.objects.get(id=request_id)
     except UserRoleRequest.DoesNotExist:
