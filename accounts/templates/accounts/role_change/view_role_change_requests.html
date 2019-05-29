@@ -23,16 +23,22 @@
             </tr>
             </thead>
             <tbody>
-            {% for request in user_role_requests %}
+            {% if user_role_requests %}
+                {% for request in user_role_requests %}
+                    <tr>
+                        <th scope="row"><a href="{% url 'view_change_role_request' request.id %}">{{ request.user }}</a>
+                        </th>
+                        <td>{{ request.current_role }}</td>
+                        <td>{{ request.intended_role }}</td>
+                        <td>{{ request.request_time }}</td>
+                        <td>{{ request.get_status_display }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
                 <tr>
-                    <th scope="row"><a href="{% url 'view_change_role_request' request.id %}">{{ request.user }}</a>
-                    </th>
-                    <td>{{ request.current_role }}</td>
-                    <td>{{ request.intended_role }}</td>
-                    <td>{{ request.request_time }}</td>
-                    <td>{{ request.get_status_display }}</td>
+                    <th scope="row" colspan="5" class="text-center">All good!!! Nothing to display.</th>
                 </tr>
-            {% endfor %}
+            {% endif %}
             </tbody>
         </table>
     </div>
