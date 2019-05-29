@@ -66,7 +66,10 @@ class RoleChangeRequestActionForm(forms.Form):
         instance.actioned_by = self.user
         instance.action_time = timezone.now()
         instance.response = data['response']
-        instance.status = data['action']
+        try:
+            instance.status = int(data['action'])
+        except (ValueError, TypeError):
+            raise ValidationError('Invalid status code')
         instance.save()
 
         if data['action'] in [UserRoleRequest.APPROVED, ]:
