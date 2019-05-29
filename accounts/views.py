@@ -2,20 +2,34 @@
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from six.moves.urllib import parse
 
+from . import utility
+from .constants import ROLE_CHANGE_REQUESTS_PER_PAGE
+from .decorators import admin_or_system_admin_required
 from .forms.profile import EditProfileForm
 from .forms.registation import RegistrationForm
 from .forms.role_change_request import RoleChangeRequestForm
-from . import utility
-from .models import User
+from .forms.role_change_request_action import RoleChangeRequestActionForm
+from .models import (
+    User,
+    UserRoleRequest,
+)
 
 from .mailer import actions
+
+
+logger = logging.getLogger(__name__)
 
 
 def registration(request):
@@ -138,7 +152,7 @@ def request_change_role(request):
             messages.success(request, 'Information successfully recorded', 'alert alert-success')
             return render(
                 request,
-                "accounts/role_change.html",
+                "accounts/role_change/role_change.html",
                 {
                     'form': form,
                     'type': 'update_profile_success',
@@ -152,11 +166,60 @@ def request_change_role(request):
 
     return render(
         request,
-        "accounts/role_change.html",
+        "accounts/role_change/role_change.html",
         {
             'form': form,
             'data': data,
             'submit_text': 'Submit Request',
+        },
+    )
+
+
+@login_required
+@admin_or_system_admin_required
+def view_change_role_requests(request):
+    user_role_requests_all = UserRoleRequest.objects.filter(~Q(status__in=[UserRoleRequest.DELETED])).order_by('status')
+
+    paginator = Paginator(user_role_requests_all, ROLE_CHANGE_REQUESTS_PER_PAGE)
+
+    page = request.GET.get('page')
+    user_role_requests = paginator.get_page(page)
+
+    return render(
+        request,
+        "accounts/role_change/view_role_change_requests.html",
+        {
+            'user_role_requests': user_role_requests,
+        },
+    )
+
+
+@login_required
+@admin_or_system_admin_required
+def view_change_role_request(request, request_id=None):
+    try:
+        user_role_request = UserRoleRequest.objects.get(id=request_id)
+    except UserRoleRequest.DoesNotExist:
+        raise Http404
+    else:
+        if user_role_request.status == user_role_request.DELETED:
+            raise Http404
+
+    if request.method == 'POST':
+        form = RoleChangeRequestActionForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save(instance=user_role_request)
+        else:
+            messages.error(request, 'Please correct the error(s) below.', 'alert alert-warning')
+    else:
+        form = RoleChangeRequestActionForm(user=request.user)
+
+    return render(
+        request,
+        "accounts/role_change/role_change_request_action.html",
+        {
+            'form': form,
+            'user_role_request': user_role_request,
         },
     )
 

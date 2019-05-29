@@ -25,9 +25,9 @@ class UserRole(admin.ModelAdmin):
 
 @admin.register(UserRoleRequest)
 class UserRoleRequest(admin.ModelAdmin):
-    list_display = ('user', 'current_role', 'intended_role', 'request_time', 'status', 'approved_time', 'approved_by')
+    list_display = ('user', 'current_role', 'intended_role', 'request_time', 'status', 'action_time', 'actioned_by')
     search_fields = ['user__username', 'user__first_name', 'user__last_name', 'user__email', 'intended_role__name',
-                     'approved_by__username']
+                     'actioned_by__username']
 
 
 @admin.register(get_user_model())

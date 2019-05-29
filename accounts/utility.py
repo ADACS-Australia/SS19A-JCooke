@@ -10,7 +10,12 @@ from django.utils import timezone
 from django.conf import settings
 
 from . import constants
-from .models import Verification
+from .models import (
+    Verification,
+    User,
+    Role,
+)
+
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +103,4 @@ def get_admins():
     Returns a list of admins from the User table
     :return: a list of Users
     """
-
-    from .models import User, Role
-
     return User.objects.filter(user_role_user__role__name=Role.CORE_MEMBER)

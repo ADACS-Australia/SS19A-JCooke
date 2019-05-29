@@ -1,0 +1,47 @@
+{% extends 'dwfcommon/base/base.html' %}
+{% load static %}
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static 'dwfcommon/style/data-list.css' %}"/>
+    <link rel="stylesheet" href="{% static 'dwfcommon/style/pagination.css' %}"/>
+{% endblock additional_styles %}
+
+{% block page_header %}
+    Change Role Requests
+{% endblock page_header %}
+
+{% block content %}
+    <div class="table-responsive">
+        <table class="table table-striped data-list requests">
+            <thead>
+            <tr>
+                <th scope="col">User (username)</th>
+                <th scope="col">From Role</th>
+                <th scope="col">To Role</th>
+                <th scope="col">Request Time</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if user_role_requests %}
+                {% for request in user_role_requests %}
+                    <tr>
+                        <th scope="row"><a href="{% url 'view_change_role_request' request.id %}">{{ request.user }}</a>
+                        </th>
+                        <td>{{ request.current_role }}</td>
+                        <td>{{ request.intended_role }}</td>
+                        <td>{{ request.request_time }}</td>
+                        <td>{{ request.get_status_display }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <th scope="row" colspan="5" class="text-center">All good!!! Nothing to display.</th>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    {% include 'dwfcommon/snippets/pagination.html' with data_list=user_role_requests %}
+{% endblock content %}

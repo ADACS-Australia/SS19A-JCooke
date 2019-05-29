@@ -102,13 +102,8 @@ class User(AbstractUser):
 
 
 class UserRole(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_role_user', null=False, blank=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_role_user', null=False, blank=False)
     role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='user_role_role', null=False, blank=False)
-
-    class Meta(object):
-        unique_together = (
-            ('user', 'role',),
-        )
 
     def __str__(self):
         return u'%s - %s' % (self.user, self.role)
@@ -122,21 +117,26 @@ class UserRoleRequest(models.Model):
                                       null=False)
     request_time = models.DateTimeField(auto_now_add=True)
 
-    ACTION_REQUIRED = 'Action Required'
-    APPROVED = 'Approved'
-    REJECTED = 'Rejected'
-    DELETED = 'Deleted'
+    ACTION_REQUIRED_DISPLAY = 'Action Required'
+    ACTION_REQUIRED = 100
+    APPROVED_DISPLAY = 'Approved'
+    APPROVED = 200
+    REJECTED_DISPLAY = 'Rejected'
+    REJECTED = 300
+    DELETED_DISPLAY = 'Deleted'
+    DELETED = 500
 
     STATUS_CHOICES = [
-        (ACTION_REQUIRED, ACTION_REQUIRED),
-        (APPROVED, APPROVED),
-        (REJECTED, REJECTED),
-        (DELETED, DELETED),
+        (ACTION_REQUIRED, ACTION_REQUIRED_DISPLAY),
+        (APPROVED, APPROVED_DISPLAY),
+        (REJECTED, REJECTED_DISPLAY),
+        (DELETED, DELETED_DISPLAY),
     ]
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, blank=False, default=ACTION_REQUIRED)
-    approved_time = models.DateTimeField(blank=True, null=True)
-    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='request_approved_by', null=True,
+    status = models.SmallIntegerField(choices=STATUS_CHOICES, blank=False, default=ACTION_REQUIRED)
+    response = models.TextField(null=True, blank=True)
+    action_time = models.DateTimeField(blank=True, null=True)
+    actioned_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='request_approved_by', null=True,
                                     blank=True)
 
     def __str__(self):
