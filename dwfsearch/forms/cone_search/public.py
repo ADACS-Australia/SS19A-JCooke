@@ -62,3 +62,11 @@ class ConeSearchForm(forms.Form):
 
         if not -90 <= dec <= 90:
             raise ValidationError(_('DEC out of range [-90, +90]'))
+
+    def get_search_query(self):
+        query_parts = dict()
+        for field in self.fields:
+            query_parts.update({
+                field: self.data.get(field),
+            })
+        return query_parts
