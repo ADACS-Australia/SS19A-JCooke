@@ -8,7 +8,8 @@ import codecs
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from ..utils.api import get_data
+from ..utility.api import get_data
+from ..utility.utils import get_search_columns
 
 
 @login_required
@@ -22,7 +23,9 @@ def cone_search_result(request):
     if not query_parts:
         return redirect('cone_search')
 
-    search_results, total = get_data(query_parts)
+    search_columns = get_search_columns(request.user)
+
+    search_results, total = get_data(query_parts, search_columns)
     return render(
         request,
         "dwfsearch/cone_search_results.html",

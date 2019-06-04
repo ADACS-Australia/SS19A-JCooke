@@ -4,7 +4,7 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 import json
 
 
-def get_data(query_parts):
+def get_data(query_parts, search_columns):
     search_results = [
         {
             'id': '10',
