@@ -16,8 +16,8 @@
             <thead>
             <tr>
                 {% for header in display_headers %}
-                    <th{% if forloop.counter == 1 %} scope="col"{% endif %}><a href="?sort={{ header.field_name }}"><i
-                            class="fas fa-sort{{ header.sort_order }}"></i> {{ header.display }}</a></th>
+                    <th{% if forloop.counter == 1 %} scope="col"{% endif %}><a href="?sort={{ header.name }}"><i
+                            class="fas fa-sort{{ header.sort_order }}"></i> {{ header.display_name }}</a></th>
                 {% endfor %}
                 <th>Action(s)</th>
             </tr>
@@ -29,7 +29,7 @@
                         {% if forloop.counter == 1 %}
                             <th scope="col" class="job-name"><a
                                     href="">{{ item }}</a></th>
-                        {% elif not forloop.last %}
+                        {% else %}
                             <td>{{ item }}</td>
                         {% endif %}
                     {% endfor %}

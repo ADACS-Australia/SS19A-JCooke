@@ -8,16 +8,16 @@ import codecs
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from dwfsearch.forms.cone_search.public import ConeSearchForm
-from dwfsearch.forms.cone_search.collaborator import ConeSearchCollaboratorForm
+from ..forms.cone_search.public import ConeSearchForm
+from ..forms.cone_search.collaborator import ConeSearchCollaboratorForm
+from ..utility.utils import reset_session
 
 
 @login_required
 def cone_search(request):
+    reset_session(request)
 
     if request.method == 'POST':
-        request.session['search_query'] = None
-
         form = ConeSearchCollaboratorForm(request.POST) \
             if request.user.is_collaborator \
             else ConeSearchForm(request.POST)
@@ -30,8 +30,6 @@ def cone_search(request):
         form = ConeSearchCollaboratorForm() \
             if request.user.is_collaborator \
             else ConeSearchForm()
-
-        request.session['search_query'] = None
 
     return render(
         request,
