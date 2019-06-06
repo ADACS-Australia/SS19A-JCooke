@@ -7,7 +7,6 @@
 
 {% block additional_styles %}
     <link rel="stylesheet" href="{% static 'dwfcommon/style/data-list.css' %}"/>
-    <link rel="stylesheet" href="{% static 'dwfcommon/style/pagination.css' %}"/>
 {% endblock additional_styles %}
 
 {% block content %}
@@ -16,8 +15,7 @@
             <thead>
             <tr>
                 {% for header in display_headers %}
-                    <th{% if forloop.counter == 1 %} scope="col"{% endif %}><a href="?sort={{ header.name }}"><i
-                            class="fas fa-sort{{ header.sort_order }}"></i> {{ header.display_name }}</a></th>
+                    <th{% if forloop.counter == 1 %} scope="col"{% endif %}>{{ header.display_name }}</th>
                 {% endfor %}
                 <th>Action(s)</th>
             </tr>
@@ -41,6 +39,4 @@
             </tbody>
         </table>
     </div>
-
-    {% include 'dwfcommon/snippets/pagination.html' %}
 {% endblock content %}
