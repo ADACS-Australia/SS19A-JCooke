@@ -52,6 +52,7 @@ class User(AbstractUser):
         except UserRole.DoesNotExist:
             return ''
 
+    @property
     def is_admin(self):
         """
         Checks whether a user is an admin or not
@@ -59,6 +60,7 @@ class User(AbstractUser):
         """
         return self.user_role in [Role.CORE_MEMBER]
 
+    @property
     def is_collaborator(self):
         """
         Checks whether a user is a core member or not

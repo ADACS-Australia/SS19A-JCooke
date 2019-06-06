@@ -1,0 +1,42 @@
+{% extends 'dwfcommon/base/base.html' %}
+{% load static %}
+
+{% block page_header %}
+    Cone Search Result
+{% endblock page_header %}
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static 'dwfcommon/style/data-list.css' %}"/>
+{% endblock additional_styles %}
+
+{% block content %}
+    <div class="data-list table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                {% for header in display_headers %}
+                    <th{% if forloop.counter == 1 %} scope="col"{% endif %}>{{ header.display_name }}</th>
+                {% endfor %}
+                <th>Action(s)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for result in search_results %}
+                <tr class="text-dark">
+                    {% for item in result %}
+                        {% if forloop.counter == 1 %}
+                            <th scope="col" class="job-name"><a
+                                    href="">{{ item }}</a></th>
+                        {% else %}
+                            <td>{{ item }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        <a href="">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}
