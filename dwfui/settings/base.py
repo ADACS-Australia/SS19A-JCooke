@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_hpc_job_controller',
     'dwfjob',
     'dwfsearch',
     'dwfcommon',
