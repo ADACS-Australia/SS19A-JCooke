@@ -74,6 +74,7 @@ class Job(HpcJob):
 
 class JobParameter(models.Model):
     field = models.CharField(max_length=255, blank=False, null=False)
+
     date = models.DateTimeField(blank=False, null=False)
 
     OLD_TEMPLATE = 'Old Template'
@@ -85,6 +86,7 @@ class JobParameter(models.Model):
     ]
 
     template = models.CharField(max_length=20, choices=TEMPLATE_CHOICES, blank=False, null=False, default=NEW_TEMPLATE)
+
     template_date = models.DateField(blank=True, null=True)
 
     RT = 'rt'
@@ -97,3 +99,37 @@ class JobParameter(models.Model):
 
     mary_seed_name = models.CharField(max_length=20, choices=MARY_SEED_NAME_CHOICES, blank=False, null=False,
                                       default=RT)
+    steps = models.SmallIntegerField(choices=list(zip(range(1, 301), range(1, 301))), blank=False, null=False,
+                                     default=1)
+
+    TRUE = 'True'
+    FALSE = 'False'
+
+    CLOBBER_CHOICES = [
+        (FALSE, FALSE),
+        (TRUE, TRUE),
+    ]
+
+    clobber = models.CharField(max_length=20, choices=CLOBBER_CHOICES, blank=False, null=False, default=FALSE)
+
+    U_BAND = 'U Band'
+    G_BAND = 'G Band'
+    R_BAND = 'R Band'
+    I_BAND = 'I Band'
+    Z_BAND = 'Z Band'
+
+    FILTER_CHOICES = [
+        (U_BAND, U_BAND),
+        (G_BAND, G_BAND),
+        (R_BAND, R_BAND),
+        (I_BAND, I_BAND),
+        (Z_BAND, Z_BAND),
+    ]
+
+    filter = models.CharField(max_length=20, choices=FILTER_CHOICES, blank=False, null=False, default=G_BAND)
+
+    old_template_name = models.CharField(max_length=2048, blank=True, null=True)
+
+    mary_run_template = models.DateField(blank=True, null=True)
+
+    mary_run_template_sequence_number = models.CharField(max_length=255, blank=True, null=True)

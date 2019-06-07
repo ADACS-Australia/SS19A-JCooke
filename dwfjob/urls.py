@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .views import *
 
 urlpatterns = [
-    path('new_job/', login_required(dummy), name='new_job'),
+    path('new_job/', login_required(new_job), name='new_job'),
     path('edit_job/<job_id>/', login_required(dummy), name='edit_job'),
     path('cancel_job/<job_id>/', login_required(dummy), name='cancel_job'),
     path('copy_job/<job_id>/', login_required(dummy), name='copy_job'),
