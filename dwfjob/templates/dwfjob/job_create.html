@@ -1,11 +1,18 @@
 {% extends 'dwfcommon/base/base.html' %}
+{% load static %}
 
 {% block page_header %}
     {{ page_header }} Mary Job
 {% endblock page_header %}
 
+{% block additional_javascript %}
+    <script src="{% static 'dwfjob/parameter.js' %}"></script>
+{% endblock additional_javascript %}
+
 {% block content %}
     <div class="single-form-wrapper mx-auto">
     {% include 'dwfcommon/snippets/render_multiple_forms.html' %}
     </div>
+
+    <div id="form_store" style="display: none"></div>
 {% endblock content %}

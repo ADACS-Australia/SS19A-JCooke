@@ -5,13 +5,15 @@
         {% include 'dwfcommon/snippets/messages.html' %}
         {% for form in forms %}
             {% for field in form %}
-                <div class="row field {% if field.errors %}error{% endif %}">
-                    <label class="col col-md-4 text-md-right" for="{{ field.auto_id }}">
-                        {{ field.label }} {% if field.field.required %}*{% endif %}
-                    </label>
-                    <div class="col col-md-8">
-                        {{ field }}
-                        {{ field.errors }}
+                <div id="div-{{ field.auto_id }}" class="field-container">
+                    <div class="row field {% if field.errors %}error{% endif %}">
+                        <label class="col col-md-4 text-md-right" for="{{ field.auto_id }}">
+                            {{ field.label }} {% if field.field.required %}*{% endif %}
+                        </label>
+                        <div class="col col-md-8">
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
                     </div>
                 </div>
             {% endfor %}
