@@ -10,7 +10,7 @@ from django_hpc_job_controller.models import HpcJob
 from .utility.display_names import *
 
 
-class Job(HpcJob):
+class MaryJob(HpcJob):
     """
     Job model extending HpcJob
     """
@@ -73,6 +73,8 @@ class Job(HpcJob):
 
 
 class JobParameter(models.Model):
+    job = models.ForeignKey(MaryJob, on_delete=models.CASCADE, blank=False, null=False)
+
     field = models.CharField(max_length=255, blank=False, null=False)
 
     date = models.DateTimeField(blank=False, null=False)
