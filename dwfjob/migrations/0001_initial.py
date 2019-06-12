@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('django_hpc_job_controller', '0009_auto_20190613_0118'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
