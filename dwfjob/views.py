@@ -10,7 +10,7 @@ from .forms.mary_job.job_parameter import JobParameterForm
 
 def new_job(request):
     if request.method == 'POST':
-        job_form = MaryJobForm(request.POST, user=request.user, prefix='job')
+        job_form = MaryJobForm(request.POST, request=request, prefix='job')
         parameter_form = JobParameterForm(request.POST, user=request.user, prefix='parameter')
 
         if all([job_form.is_valid(), parameter_form.is_valid(), ]):
@@ -19,6 +19,8 @@ def new_job(request):
     else:
         job_form = MaryJobForm(prefix='job')
         parameter_form = JobParameterForm(prefix='parameter')
+
+    parameter_form.update_fields_to_required()
 
     return render(
         request,

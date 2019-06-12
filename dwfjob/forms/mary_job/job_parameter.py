@@ -54,6 +54,10 @@ class JobParameterForm(forms.ModelForm):
         self.fields['mary_run_template'].widget.attrs.update({'class': 'form-control'})
         self.fields['mary_run_template_sequence_number'].widget.attrs.update({'class': 'form-control'})
 
+    def update_fields_to_required(self):
+        for field_name in self.fields:
+            self.fields[field_name].required = True
+
     class Meta(object):
         model = JobParameter
         fields = FIELDS
