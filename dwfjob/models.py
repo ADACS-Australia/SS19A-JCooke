@@ -79,12 +79,14 @@ class JobParameter(models.Model):
 
     date = models.DateTimeField(blank=False, null=False)
 
-    OLD_TEMPLATE = 'Old Template'
-    NEW_TEMPLATE = 'New Template'
+    OLD_TEMPLATE = 'old_template'
+    OLD_TEMPLATE_DISPLAY = 'Old Template'
+    NEW_TEMPLATE = 'new_template'
+    NEW_TEMPLATE_DISPLAY = 'New Template'
 
     TEMPLATE_CHOICES = [
-        (OLD_TEMPLATE, OLD_TEMPLATE),
-        (NEW_TEMPLATE, NEW_TEMPLATE),
+        (OLD_TEMPLATE, OLD_TEMPLATE_DISPLAY),
+        (NEW_TEMPLATE, NEW_TEMPLATE_DISPLAY),
     ]
 
     template = models.CharField(max_length=20, choices=TEMPLATE_CHOICES, blank=False, null=False, default=NEW_TEMPLATE)
