@@ -114,11 +114,12 @@ class JobParameter(models.Model):
 
     clobber = models.CharField(max_length=20, choices=CLOBBER_CHOICES, blank=False, null=False, default=FALSE)
 
-    U_BAND = 'U Band'
-    G_BAND = 'G Band'
-    R_BAND = 'R Band'
-    I_BAND = 'I Band'
-    Z_BAND = 'Z Band'
+    U_BAND = 'u Band'
+    G_BAND = 'g Band'
+    R_BAND = 'r Band'
+    I_BAND = 'i Band'
+    Z_BAND = 'z Band'
+    Y_BAND = 'Y Band'
 
     FILTER_CHOICES = [
         (U_BAND, U_BAND),
@@ -126,6 +127,7 @@ class JobParameter(models.Model):
         (R_BAND, R_BAND),
         (I_BAND, I_BAND),
         (Z_BAND, Z_BAND),
+        (Y_BAND, Y_BAND),
     ]
 
     filter = models.CharField(max_length=20, choices=FILTER_CHOICES, blank=False, null=False, default=G_BAND)
