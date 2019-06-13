@@ -66,12 +66,15 @@ class JobParameterForm(forms.ModelForm):
         self.fields['field'].widget.attrs.update({'class': 'form-control'})
         # setting up the UTC date as current date.
         self.fields['date'].initial = timezone.now()
+        self.fields['date'].input_formats = ['%d/%m/%Y', ]
         self.fields['template'].widget.attrs.update({'class': 'form-control'})
+        self.fields['template_date'].input_formats = ['%d/%m/%Y', ]
         self.fields['mary_seed_name'].widget.attrs.update({'class': 'form-control'})
         self.fields['steps'].widget.attrs.update({'class': 'form-control'})
         self.fields['clobber'].widget.attrs.update({'class': 'form-control'})
         self.fields['filter'].widget.attrs.update({'class': 'form-control'})
         self.fields['old_template_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['mary_run_template'].input_formats = ['%d/%m/%Y', ]
         self.fields['mary_run_template_sequence_number'].widget.attrs.update({'class': 'form-control'})
 
     def update_fields_to_required(self):
