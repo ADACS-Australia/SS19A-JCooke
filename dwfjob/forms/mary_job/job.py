@@ -67,7 +67,7 @@ class MaryJobForm(forms.ModelForm):
         """
         Overrides the default save method
         :param kwargs: Dictionary of keyword arguments
-        :return: Nothi
+        :return: instance of the model
         """
         self.full_clean()
         data = self.cleaned_data
@@ -81,4 +81,5 @@ class MaryJobForm(forms.ModelForm):
             }
         )
 
-        self.request.session['draft_job'] = job_created.as_json()
+        return job_created
+        # self.request.session['draft_job'] = job_created.as_json()

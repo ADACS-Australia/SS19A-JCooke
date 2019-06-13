@@ -14,7 +14,12 @@ def new_job(request):
         parameter_form = JobParameterForm(request.POST, user=request.user, prefix='parameter')
 
         if all([job_form.is_valid(), parameter_form.is_valid(), ]):
-            pass
+            job_created = job_form.save()
+
+            # creating the form with job
+            parameter_form = JobParameterForm(request.POST, user=request.user, job=job_created, prefix='parameter')
+            parameter_form.save()
+            # raise Exception('Checking transaction...')
 
     else:
         job_form = MaryJobForm(prefix='job')

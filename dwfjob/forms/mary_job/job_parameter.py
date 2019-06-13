@@ -62,6 +62,7 @@ WIDGETS = {
 class JobParameterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
+        self.job = kwargs.pop('job', None)
         super(JobParameterForm, self).__init__(*args, **kwargs)
         self.fields['field'].widget.attrs.update({'class': 'form-control'})
         # setting up the UTC date as current date.
@@ -77,12 +78,40 @@ class JobParameterForm(forms.ModelForm):
         self.fields['mary_run_template'].input_formats = ['%d/%m/%Y', ]
         self.fields['mary_run_template_sequence_number'].widget.attrs.update({'class': 'form-control'})
 
-    def update_fields_to_required(self):
-        for field_name in self.fields:
-            self.fields[field_name].required = True
-
     class Meta(object):
         model = JobParameter
         fields = FIELDS
         labels = LABELS
         widgets = WIDGETS
+
+    def update_fields_to_required(self):
+        for field_name in self.fields:
+            self.fields[field_name].required = True
+
+    def get_data(self, parameter_name):
+        data = self.cleaned_data
+
+        return data.get(parameter_name, None)
+
+    def save(self, **kwargs):
+        """
+        Overrides the default save method
+        :param kwargs: Dictionary of keyword arguments
+        :return: instance of the model
+        """
+        self.full_clean()
+        # data = self.cleaned_data
+
+        # create default data dictionary
+        data_dict = {}
+        for field_name in self.fields:
+            data_dict.update({
+                field_name: self.get_data(field_name)
+            })
+
+        job_parameter, created = JobParameter.objects.update_or_create(
+            job=self.job,
+            defaults=data_dict,
+        )
+
+        return job_parameter
