@@ -19,7 +19,11 @@ def new_job(request):
             # creating the form with job
             parameter_form = JobParameterForm(request.POST, user=request.user, job=job_created, prefix='parameter')
             parameter_form.save()
-            # raise Exception('Checking transaction...')
+
+            action = request.POST.get('action', None)
+
+            # if action == 'Submit':
+            #     mary_job = MaryJob(job=job_created)
 
     else:
         job_form = MaryJobForm(prefix='job')
@@ -33,6 +37,7 @@ def new_job(request):
         {
             'page_header': 'New',
             'forms': [job_form, parameter_form, ],
+            'submit_and_save': True,
             'submit_text': 'Launch',
         }
     )

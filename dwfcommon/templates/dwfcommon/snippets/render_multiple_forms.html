@@ -30,8 +30,9 @@
         {% endfor %}
         <div class="row">
             <div class="buttons col col-md-12 text-md-right">
-                <input class="btn btn-warning" type="reset" tabindex="101" value="Reset"/>
-                <input class="btn btn-success" type="submit" tabindex="100"
+                <input class="btn btn-warning" type="reset" tabindex="102" value="Reset"/>
+                <input class="btn btn-primary" name="action" type="submit" tabindex="101" value="Save" />
+                <input class="btn btn-success" name="action" type="submit" tabindex="100"
                        value="{% if submit_text %}{{ submit_text }}{% else %}Submit{% endif %}"/>
             </div>
         </div>
