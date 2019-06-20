@@ -7,7 +7,7 @@ from django.db import models
 
 from django_hpc_job_controller.models import HpcJob
 
-from .utility.display_names import *
+from dwfcommon.utility.display_names import *
 
 
 class MaryJob(HpcJob):

@@ -6,6 +6,7 @@ from django.shortcuts import render
 
 from .forms.mary_job.job import MaryJobForm
 from .forms.mary_job.job_parameter import JobParameterForm
+from .utility.job import DwfMaryJob
 
 
 def new_job(request):
@@ -22,8 +23,13 @@ def new_job(request):
 
             action = request.POST.get('action', None)
 
-            # if action == 'Submit':
-            #     mary_job = MaryJob(job=job_created)
+            if action == 'Launch':
+                mary_job_json = DwfMaryJob(job_id=job_created.id).as_json()
+                # the json representation of the job is to be saved in the Job model
+                job_created.json_representation = mary_job_json
+
+                # Submit the job to HPC
+                job_created.submit(mary_job_json)
 
     else:
         job_form = MaryJobForm(prefix='job')
