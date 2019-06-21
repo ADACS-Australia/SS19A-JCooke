@@ -33,9 +33,9 @@ class TestJSONRepresentation(TestCase):
         expected_data = {
             "description": None,
             "name": "test job",
-            "parameter": {
+            "parameters": {
                 "clobber": "True",
-                "date": "20/06/2019",
+                "date": "21/06/2019",
                 "field": "some/a field",
                 "filter": "g Band",
                 "mary_run_template": None,
@@ -56,7 +56,7 @@ class TestJSONRepresentation(TestCase):
         JobParameter.objects.create(
             job=mary_job,
             field='some/a field',
-            date='2019-06-20 11:59:59',  # it will be saved as UTC so adding some time to it for testing
+            date='2019-06-21',  # it will be saved as UTC
             template='old_template',
             template_date='2019-06-11',
             mary_seed_name='rt',

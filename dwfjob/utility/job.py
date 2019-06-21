@@ -143,7 +143,7 @@ class DwfMaryJob(object):
         json_dict = dict(
             name=self.job.name,
             description=self.job.description,
-            parameter=job_parameter_dict,
+            parameters=job_parameter_dict,
         )
 
         # returning json with correct indentation

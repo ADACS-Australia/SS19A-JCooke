@@ -77,7 +77,7 @@ class JobParameter(models.Model):
 
     field = models.CharField(max_length=255, blank=False, null=False)
 
-    date = models.DateTimeField(blank=False, null=False)
+    date = models.DateField(blank=False, null=False)
 
     OLD_TEMPLATE = 'old_template'
     OLD_TEMPLATE_DISPLAY = 'Old Template'
