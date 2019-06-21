@@ -21,6 +21,7 @@ FIELDS = [
     'old_template_name',
     'mary_run_template',
     'mary_run_template_sequence_number',
+    'image_names'
 ]
 
 LABELS = {
@@ -35,6 +36,7 @@ LABELS = {
     'old_template_name': _('Name of old template (downloaded from NOAO portal)'),
     'mary_run_template': _('Date of mary template'),
     'mary_run_template_sequence_number': _('Sequence number of previous mary run'),
+    'image_names': _('6 digit code in the NOAO name'),
 }
 
 WIDGETS = {
@@ -77,6 +79,7 @@ class JobParameterForm(forms.ModelForm):
         self.fields['old_template_name'].widget.attrs.update({'class': 'form-control'})
         self.fields['mary_run_template'].input_formats = ['%d/%m/%Y', ]
         self.fields['mary_run_template_sequence_number'].widget.attrs.update({'class': 'form-control'})
+        self.fields['image_names'].widget.attrs.update({'class': 'form-control'})
 
     class Meta(object):
         model = JobParameter

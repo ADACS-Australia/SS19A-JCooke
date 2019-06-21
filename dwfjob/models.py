@@ -3,6 +3,7 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
 from django.conf import settings
+from django.core.validators import RegexValidator
 from django.db import models
 
 from django_hpc_job_controller.models import HpcJob
@@ -139,3 +140,11 @@ class JobParameter(models.Model):
     mary_run_template = models.DateField(blank=True, null=True)
 
     mary_run_template_sequence_number = models.CharField(max_length=255, blank=True, null=True)
+
+    image_names = models.CharField(max_length=6, blank=False, null=False, validators=[
+        RegexValidator(
+            regex='^[0-9]{6}$',
+            message='Must be a 6 digit code',
+            code='invalid_image_names',
+        )
+    ])
