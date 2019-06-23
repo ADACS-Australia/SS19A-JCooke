@@ -44,7 +44,8 @@ class TestJSONRepresentation(TestCase):
                 "old_template_name": "my old template",
                 "steps": 20,
                 "template": "old_template",
-                "template_date": "11/06/2019"
+                "template_date": "11/06/2019",
+                "image_names": "",
             }
         }
 
