@@ -5,7 +5,10 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 
-from .views import *
+from .views.job import *
+from .views.jobs import (
+    jobs,
+)
 
 urlpatterns = [
     path('new_job/', login_required(new_job), name='new_job'),
@@ -16,7 +19,7 @@ urlpatterns = [
     path('make_job_private/<job_id>/', login_required(dummy), name='make_job_private'),
     path('make_job_public/<job_id>/', login_required(dummy), name='make_job_public'),
     path('job/<job_id>/', login_required(dummy), name='job'),
-    path('jobs/', dummy, name='jobs'),
+    path('jobs/', login_required(jobs), name='jobs'),
     path('all_jobs/', dummy, name='all_jobs'),
     path('public_jobs/', dummy, name='public_jobs'),
     path('deleted_jobs/', dummy, name='deleted_jobs'),

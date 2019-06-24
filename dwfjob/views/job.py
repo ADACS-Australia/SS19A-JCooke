@@ -4,9 +4,9 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 
 from django.shortcuts import render
 
-from .forms.mary_job.job import MaryJobForm
-from .forms.mary_job.job_parameter import JobParameterForm
-from .utility.job import DwfMaryJob
+from ..forms.mary_job.job import MaryJobForm
+from ..forms.mary_job.job_parameter import JobParameterForm
+from ..utility.job import DwfMaryJob
 
 
 def new_job(request):
