@@ -51,6 +51,45 @@ def jobs(request):
 
 
 @login_required
+@admin_or_system_admin_required
+def all_jobs(request):
+    """
+    Collects all jobs that are not deleted or draft and renders them in template.
+    :param request: Django request object.
+    :return: Rendered template.
+    """
+
+    my_jobs = MaryJob.objects.all() \
+        .exclude(job_status__in=[JobStatus.DRAFT, JobStatus.DELETED]) \
+        .order_by('-last_updated', '-job_pending_time')
+
+    paginator = Paginator(my_jobs, JOBS_PER_PAGE)
+
+    page = request.GET.get('page')
+    job_list = paginator.get_page(page)
+
+    # creating mary jobs from jobs
+    # it will create a light job with list of actions this user can do based on the job status
+    mary_jobs = []
+    for job in job_list:
+
+        mary_job = DwfMaryJob(job_id=job.id, light=True)
+
+        if mary_job:
+            mary_job.list_actions(request.user)
+            mary_jobs.append(mary_job)
+
+    return render(
+        request,
+        "dwfjob/all-jobs.html",
+        {
+            'jobs': mary_jobs,
+            'admin_view': True,
+        }
+    )
+
+
+@login_required
 def drafts(request):
     """
     Collects all drafts of the user and renders them in template.
