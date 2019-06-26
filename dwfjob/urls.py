@@ -9,6 +9,7 @@ from .views.job import *
 from .views.jobs import (
     jobs,
     drafts,
+    all_drafts,
 )
 
 urlpatterns = [
@@ -26,5 +27,5 @@ urlpatterns = [
     path('deleted_jobs/', dummy, name='deleted_jobs'),
     path('all_deleted_jobs/', dummy, name='all_deleted_jobs'),
     path('drafts/', drafts, name='drafts'),
-    path('all_drafts/', dummy, name='all_drafts'),
+    path('all_drafts/', all_drafts, name='all_drafts'),
 ]
