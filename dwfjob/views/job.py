@@ -2,7 +2,7 @@
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from ..forms.mary_job.job import MaryJobForm
 from ..forms.mary_job.job_parameter import JobParameterForm
@@ -28,8 +28,15 @@ def new_job(request):
                 # the json representation of the job is to be saved in the Job model
                 job_created.json_representation = mary_job_json
 
-                # Submit the job to HPC
-                job_created.submit(mary_job_json)
+                try:
+                    # Submit the job to HPC
+                    job_created.submit(mary_job_json)
+                except:
+                    pass
+                else:
+                    return redirect('jobs')
+            elif action == 'Save':
+                return redirect('drafts')
 
     else:
         job_form = MaryJobForm(prefix='job')
