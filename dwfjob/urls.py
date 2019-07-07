@@ -11,6 +11,8 @@ from .views.jobs import (
     all_jobs,
     drafts,
     all_drafts,
+    deleted_jobs,
+    all_deleted_jobs,
 )
 
 urlpatterns = [
@@ -25,8 +27,8 @@ urlpatterns = [
     path('jobs/', jobs, name='jobs'),
     path('all_jobs/', all_jobs, name='all_jobs'),
     path('public_jobs/', dummy, name='public_jobs'),
-    path('deleted_jobs/', dummy, name='deleted_jobs'),
-    path('all_deleted_jobs/', dummy, name='all_deleted_jobs'),
+    path('deleted_jobs/', deleted_jobs, name='deleted_jobs'),
+    path('all_deleted_jobs/', all_deleted_jobs, name='all_deleted_jobs'),
     path('drafts/', drafts, name='drafts'),
     path('all_drafts/', all_drafts, name='all_drafts'),
 ]
