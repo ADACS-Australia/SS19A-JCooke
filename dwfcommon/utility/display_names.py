@@ -99,6 +99,20 @@ MARY_SEED_NAME = 'mary_seed_name'
 MARY_SEED_NAME_DISPLAY = 'Mary run seed name'
 STEPS = 'steps'
 STEPS_DISPLAY = 'Number of images to be coadded'
+CLOBBER = 'clobber'
+CLOBBER_DISPLAY = 'Clobber run'
+FILTER = 'filter'
+FILTER_DISPLAY = 'Filter'
+MARY_RUN_TEMPLATE = 'mary_run_template'
+MARY_RUN_TEMPLATE_DISPLAY = 'Date of mary template'
+MARY_RUN_TEMPLATE_SEQUENCE_NUMBER = 'mary_run_template_sequence_number'
+MARY_RUN_TEMPLATE_SEQUENCE_NUMBER_DISPLAY = 'Sequence number of previous mary run'
+IMAGE_NAMES = 'image_names'
+IMAGE_NAMES_DISPLAY = '6 digit code in the NOAO name'
+TEMPLATE_DATE = 'template_date'
+TEMPLATE_DATE_DISPLAY = 'Template date'
+OLD_TEMPLATE_NAME = 'old_template_name'
+OLD_TEMPLATE_NAME_DISPLAY = 'Name of old template (downloaded from NOAO portal)'
 
 
 DISPLAY_NAME_MAP.update({
@@ -109,4 +123,11 @@ DISPLAY_NAME_MAP.update({
     TEMPLATE: TEMPLATE_DISPLAY,
     MARY_SEED_NAME: MARY_SEED_NAME_DISPLAY,
     STEPS: STEPS_DISPLAY,
+    CLOBBER: CLOBBER_DISPLAY,
+    FILTER: FILTER_DISPLAY,
+    MARY_RUN_TEMPLATE: MARY_RUN_TEMPLATE_DISPLAY,
+    MARY_RUN_TEMPLATE_SEQUENCE_NUMBER: MARY_RUN_TEMPLATE_SEQUENCE_NUMBER_DISPLAY,
+    IMAGE_NAMES: IMAGE_NAMES_DISPLAY,
+    TEMPLATE_DATE: TEMPLATE_DATE_DISPLAY,
+    OLD_TEMPLATE_NAME: OLD_TEMPLATE_NAME_DISPLAY,
 })
