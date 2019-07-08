@@ -10,6 +10,8 @@ from django_hpc_job_controller.models import HpcJob
 
 from dwfcommon.utility.display_names import *
 
+from .validators import validate_yymmdd_date
+
 
 class MaryJob(HpcJob):
     """
@@ -78,7 +80,7 @@ class JobParameter(models.Model):
 
     field = models.CharField(max_length=255, blank=False, null=False)
 
-    date = models.DateField(blank=False, null=False)
+    date = models.CharField(max_length=6, blank=False, null=False, validators=[validate_yymmdd_date, ])
 
     OLD_TEMPLATE = 'old_template'
     OLD_TEMPLATE_DISPLAY = 'Old Template'
@@ -92,7 +94,7 @@ class JobParameter(models.Model):
 
     template = models.CharField(max_length=20, choices=TEMPLATE_CHOICES, blank=False, null=False, default=NEW_TEMPLATE)
 
-    template_date = models.DateField(blank=True, null=True)
+    template_date = models.CharField(max_length=6, blank=True, null=True, validators=[validate_yymmdd_date, ])
 
     RT = 'rt'
     NOAO = 'NOAO'
@@ -137,7 +139,7 @@ class JobParameter(models.Model):
 
     old_template_name = models.CharField(max_length=2048, blank=True, null=True)
 
-    mary_run_template = models.DateField(blank=True, null=True)
+    mary_run_template = models.CharField(max_length=6, blank=True, null=True, validators=[validate_yymmdd_date, ])
 
     mary_run_template_sequence_number = models.CharField(max_length=255, blank=True, null=True)
 

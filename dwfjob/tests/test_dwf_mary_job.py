@@ -35,14 +35,14 @@ class TestJSONRepresentation(TestCase):
             "name": "test job",
             "parameters": {
                 "clobber": "True",
-                "date": "21/06/2019",
+                "date": "190621",
                 "field": "some/a field",
                 "filter": "g Band",
                 "mary_seed_name": "rt",
                 "old_template_name": "my old template",
                 "steps": 20,
                 "template": "old_template",
-                "template_date": "11/06/2019",
+                "template_date": "190611",
                 "image_names": "",
             }
         }
@@ -55,9 +55,9 @@ class TestJSONRepresentation(TestCase):
         JobParameter.objects.create(
             job=mary_job,
             field='some/a field',
-            date='2019-06-21',  # it will be saved as UTC
+            date='190621',  # it will be saved as UTC
             template='old_template',
-            template_date='2019-06-11',
+            template_date='190611',
             mary_seed_name='rt',
             steps=20,
             clobber='True',

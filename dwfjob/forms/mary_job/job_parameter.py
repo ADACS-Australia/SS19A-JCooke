@@ -3,11 +3,11 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
 from django import forms
-from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from ...models import JobParameter
+from ...utility.utils import utc_current_yymmdd_date
 
 FIELDS = [
     'field',
@@ -39,27 +39,6 @@ LABELS = {
     'image_names': _('6 digit code in the NOAO name'),
 }
 
-WIDGETS = {
-    'date': forms.DateInput(
-        format='%d/%m/%Y',
-        attrs={
-            'class': 'form-control date-picker',
-        },
-    ),
-    'template_date': forms.DateInput(
-        format='%d/%m/%Y',
-        attrs={
-            'class': 'form-control date-picker',
-        },
-    ),
-    'mary_run_template': forms.DateInput(
-        format='%d/%m/%Y',
-        attrs={
-            'class': 'form-control date-picker',
-        },
-    )
-}
-
 
 class JobParameterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -68,16 +47,16 @@ class JobParameterForm(forms.ModelForm):
         super(JobParameterForm, self).__init__(*args, **kwargs)
         self.fields['field'].widget.attrs.update({'class': 'form-control'})
         # setting up the UTC date as current date.
-        self.fields['date'].initial = timezone.now()
-        self.fields['date'].input_formats = ['%d/%m/%Y', ]
+        self.fields['date'].initial = utc_current_yymmdd_date()
+        self.fields['date'].widget.attrs.update({'class': 'form-control'})
         self.fields['template'].widget.attrs.update({'class': 'form-control'})
-        self.fields['template_date'].input_formats = ['%d/%m/%Y', ]
+        self.fields['template_date'].widget.attrs.update({'class': 'form-control'})
         self.fields['mary_seed_name'].widget.attrs.update({'class': 'form-control'})
         self.fields['steps'].widget.attrs.update({'class': 'form-control'})
         self.fields['clobber'].widget.attrs.update({'class': 'form-control'})
         self.fields['filter'].widget.attrs.update({'class': 'form-control'})
         self.fields['old_template_name'].widget.attrs.update({'class': 'form-control'})
-        self.fields['mary_run_template'].input_formats = ['%d/%m/%Y', ]
+        self.fields['mary_run_template'].widget.attrs.update({'class': 'form-control'})
         self.fields['mary_run_template_sequence_number'].widget.attrs.update({'class': 'form-control'})
         self.fields['image_names'].widget.attrs.update({'class': 'form-control'})
 
@@ -85,7 +64,6 @@ class JobParameterForm(forms.ModelForm):
         model = JobParameter
         fields = FIELDS
         labels = LABELS
-        widgets = WIDGETS
 
     def update_fields_to_required(self):
         for field_name in self.fields:
