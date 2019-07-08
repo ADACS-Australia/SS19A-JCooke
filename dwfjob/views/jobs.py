@@ -5,9 +5,11 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import render
 
 from accounts.decorators import admin_or_system_admin_required
+from dwfcommon.utility.utils import get_readable_size
 
 from ..utility.constants import JOBS_PER_PAGE
 from ..utility.job import DwfMaryJob
@@ -233,3 +235,85 @@ def all_deleted_jobs(request):
             'admin_view': True,
         }
     )
+
+
+@login_required
+def view_job(request, job_id):
+    """
+    Collects a particular job information and renders them in template.
+    :param request: Django request object.
+    :param job_id: id of the job.
+    :return: Rendered template.
+    """
+
+    job = None
+
+    # checking:
+    # 1. Job ID and job exists
+    if job_id:
+        try:
+            job = MaryJob.objects.get(id=job_id)
+
+            # Check that this user has access to this job
+            # it can view if there is a copy access
+            mary_job = DwfMaryJob(job_id=job.id, light=False)
+            mary_job.list_actions(request.user)
+
+            if 'copy' not in mary_job.job_actions:
+                job = None
+            else:
+                # Empty parameter dict to pass to template
+                job_data = {
+                    'L1': None,
+                    'V1': None,
+                    'H1': None,
+                    'corner': None,
+                    'archive': None,
+                    # for drafts there are no clusters assigned, so mary_job.job.custer is None for them
+                    'is_online': mary_job.job.cluster is not None and mary_job.job.cluster.is_connected() is not None
+                }
+
+                # Check if the cluster is online
+                if job_data['is_online']:
+                    try:
+                        # Get the output file list for this job
+                        result = mary_job.job.fetch_remote_file_list(path="/", recursive=True)
+                        # Waste the message id
+                        result.pop_uint()
+                        # Iterate over each file
+                        num_entries = result.pop_uint()
+                        for _ in range(num_entries):
+                            path = result.pop_string()
+                            # Waste the is_file bool
+                            result.pop_bool()
+                            # Waste the file size
+                            size = get_readable_size(result.pop_ulong())
+
+                            # Check if this is a wanted file
+                            if 'output/L1_frequency_domain_data.png' in path:
+                                job_data['L1'] = {'path': path, 'size': size}
+                            if 'output/V1_frequency_domain_data.png' in path:
+                                job_data['V1'] = {'path': path, 'size': size}
+                            if 'output/H1_frequency_domain_data.png' in path:
+                                job_data['H1'] = {'path': path, 'size': size}
+                            if 'output/mary_corner.png' in path:
+                                job_data['corner'] = {'path': path, 'size': size}
+                            if 'mary_job_{}.tar.gz'.format(mary_job.job.id) in path:
+                                job_data['archive'] = {'path': path, 'size': size}
+                    except:
+                        job_data['is_online'] = False
+
+                return render(
+                    request,
+                    "dwfjob/view_job.html",
+                    {
+                        'mary_job': mary_job,
+                        'job_data': job_data
+                    }
+                )
+        except MaryJob.DoesNotExist:
+            pass
+
+    if not job:
+        # should return to a page notifying that no permission to view
+        raise Http404

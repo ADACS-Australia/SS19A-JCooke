@@ -3,6 +3,7 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
 import json
+from collections import OrderedDict
 
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -59,6 +60,9 @@ class DwfMaryJob(object):
     # list to hold the Job Parameter
     job_parameter = None
 
+    # dictionary to hold the filtered Job Parameters according to the template choice
+    job_parameters = None
+
     # what actions a user can perform on this job
     job_actions = None
 
@@ -104,6 +108,7 @@ class DwfMaryJob(object):
         # populating job parameters tab information
         try:
             self.job_parameter = JobParameter.objects.get(job=self.job)
+            self.job_parameters = self.get_job_parameters()
         except JobParameter.DoesNotExist:
             pass
 
@@ -122,28 +127,41 @@ class DwfMaryJob(object):
             return None
         return result
 
+    def get_job_parameters(self):
+        """
+        Generates an ordered dictionary of job parameters by skipping the required fields based on the template choice.
+        :return: An ordered dictionary of job parameters
+        """
+        job_parameter_dict = OrderedDict()
+        if self.job_parameter:
+            fields = JobParameter._meta.get_fields()
+
+            skip_fields = ['job', 'id', ]
+
+            if self.job_parameter.template == JobParameter.OLD_TEMPLATE:
+                skip_fields.append('mary_run_template')
+                skip_fields.append('mary_run_template_sequence_number')
+            elif self.job_parameter.template == JobParameter.NEW_TEMPLATE:
+                skip_fields.append('old_template_name')
+                skip_fields.append('template_date')
+
+            for field in fields:
+                if field.name not in skip_fields:
+                    job_parameter_dict.update({
+                        field.name: get_formatted_value_for_json(field, getattr(self.job_parameter, field.name)),
+                    })
+        return job_parameter_dict
+
     def as_json(self):
         """
         Generates the json representation of the MaryJob so that DWF Core can digest it
         :return: Json Representation
         """
-
-        # processing data dict
-        job_parameter_dict = dict()
-        if self.job_parameter:
-            fields = JobParameter._meta.get_fields()
-
-            for field in fields:
-                if field.name not in ['job', 'id', ]:
-                    job_parameter_dict.update({
-                        field.name: get_formatted_value_for_json(field, getattr(self.job_parameter, field.name)),
-                    })
-
         # accumulating all in one dict
         json_dict = dict(
             name=self.job.name,
             description=self.job.description,
-            parameters=job_parameter_dict,
+            parameters=self.job_parameters,
         )
 
         # returning json with correct indentation

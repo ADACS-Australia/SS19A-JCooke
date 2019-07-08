@@ -21,6 +21,7 @@ from ..utility.display_names import (
     DELETED,
     PUBLIC,
 )
+from ..utility.utils import find_display_name
 
 register = template.Library()
 
@@ -61,3 +62,15 @@ def status_color(status):
     }
 
     return status_color_map.get(status, 'secondary')
+
+
+@register.filter(name='display_name')
+def display_name(value):
+    """
+    Finding the display name for displaying in the UI.
+    :param value: value for what display name will be searched.
+    :return: display name of the value
+    """
+
+    # calling a utility function that does the same
+    return find_display_name(value)

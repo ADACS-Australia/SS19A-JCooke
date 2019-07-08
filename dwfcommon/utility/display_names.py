@@ -82,3 +82,31 @@ DISPLAY_NAME_MAP_HPC_JOB.update({
     JobStatus.DELETED: DELETED,
     JobStatus.COMPLETED: COMPLETED,
 })
+
+
+# Job Parameter Names
+OLD_TEMPLATE = 'old_template'
+OLD_TEMPLATE_DISPLAY = 'Old Template'
+NEW_TEMPLATE = 'new_template'
+NEW_TEMPLATE_DISPLAY = 'New Template'
+FIELD = 'field'
+FIELD_DISPLAY = 'Field'
+DATE = 'date'
+DATE_DISPLAY = 'Date'
+TEMPLATE = 'template'
+TEMPLATE_DISPLAY = 'Template'
+MARY_SEED_NAME = 'mary_seed_name'
+MARY_SEED_NAME_DISPLAY = 'Mary run seed name'
+STEPS = 'steps'
+STEPS_DISPLAY = 'Number of images to be coadded'
+
+
+DISPLAY_NAME_MAP.update({
+    OLD_TEMPLATE: OLD_TEMPLATE_DISPLAY,
+    NEW_TEMPLATE: NEW_TEMPLATE_DISPLAY,
+    FIELD: FIELD_DISPLAY,
+    DATE: DATE_DISPLAY,
+    TEMPLATE: TEMPLATE_DISPLAY,
+    MARY_SEED_NAME: MARY_SEED_NAME_DISPLAY,
+    STEPS: STEPS_DISPLAY,
+})

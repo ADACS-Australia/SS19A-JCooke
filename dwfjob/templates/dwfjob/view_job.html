@@ -1,0 +1,99 @@
+{% extends 'dwfjob/job_base/view_job.html' %}
+{% load template_filters %}
+{% load static %}
+
+{% block output_and_download %}
+    {% if mary_job.job.status == 'completed' or mary_job.job.status == 'public' %}
+        <div class="job-view-section">
+            <div class="row">
+                <div class="col col-md-12">
+                    <div class="heading">Outputs &#38; Download Options</div>
+                </div>
+            </div>
+            <div class="body preview">
+                {% if job_data.is_online %}
+                    <ul>
+                        {% if job_data.H1 %}
+                            <li class="card text-center">
+                                <img class="card-img-top"
+                                     src="{% url 'download_asset' mary_job.job.id 0 job_data.H1.path %}"
+                                     alt="Hanford Detector Frequency Domain Data">
+                                <div class="card-body">
+                                    <p class="card-text">Hanford Detector Frequency Domain Data</p>
+                                </div>
+                            </li>
+                        {% endif %}
+                        {% if job_data.L1 %}
+                            <li class="card text-center">
+                                <img class="card-img-top"
+                                     src="{% url 'download_asset' mary_job.job.id 0 job_data.L1.path %}"
+                                     alt="Livingston Detector Frequency Domain Data">
+                                <div class="card-body">
+                                    <p class="card-text">Livingston Detector Frequency Domain Data</p>
+                                </div>
+                            </li>
+                        {% endif %}
+                        {% if job_data.V1 %}
+                            <li class="card text-center">
+                                <img class="card-img-top"
+                                     src="{% url 'download_asset' mary_job.job.id 0 job_data.V1.path %}"
+                                     alt="Virgo Detector Frequency Domain Data">
+                                <div class="card-body">
+                                    <p class="card-text">Virgo Detector Frequency Domain Data</p>
+                                </div>
+                            </li>
+                        {% endif %}
+                        {% if job_data.corner %}
+                            <li class="card text-center">
+                                <img class="card-img-top"
+                                     src="{% url 'download_asset' mary_job.job.id 0 job_data.corner.path %}"
+                                     alt="Corner Data">
+                                <div class="card-body">
+                                    <p class="card-text">Corner Data</p>
+                                </div>
+                            </li>
+                        {% endif %}
+
+                        {% if job_data.archive %}
+                            <li class="card text-center">
+                                <a href="{% url 'download_asset' mary_job.job.id 1 job_data.archive.path %}">
+                                    <img class="card-img-top small" src="{% static 'dwfjob/image/archive.png' %}"
+                                         alt="Archive"/>
+                                    <p class="size">Size: {{ job_data.archive.size }}</p>
+                                    <div class="card-body">
+                                        <p class="card-text">Download Archive</p>
+                                    </div>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% else %}
+                    <h5>Unable to fetch output files. Cluster containing the output of this job is not currently
+                        online.</h5>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock output_and_download %}
+
+{% block input_parameter %}
+    <div class="job-view-section">
+        <div class="row">
+            <div class="col col-md-12">
+                <div class="heading">Input Parameters</div>
+            </div>
+        </div>
+        <div class="body meta-data">
+            <table class="table table-striped">
+                <tbody>
+                {% for parameter_name, parameter_value in mary_job.job_parameters.items %}
+                    <tr>
+                        <th scope="row">{{ parameter_name | display_name}}</th>
+                        <td>{{ parameter_value | display_name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock input_parameter %}

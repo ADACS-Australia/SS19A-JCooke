@@ -13,6 +13,7 @@ from .views.jobs import (
     all_drafts,
     deleted_jobs,
     all_deleted_jobs,
+    view_job,
 )
 
 urlpatterns = [
@@ -23,7 +24,7 @@ urlpatterns = [
     path('delete_job/<job_id>/', login_required(dummy), name='delete_job'),
     path('make_job_private/<job_id>/', login_required(dummy), name='make_job_private'),
     path('make_job_public/<job_id>/', login_required(dummy), name='make_job_public'),
-    path('job/<job_id>/', login_required(dummy), name='job'),
+    path('job/<job_id>/', view_job, name='job'),
     path('jobs/', jobs, name='jobs'),
     path('all_jobs/', all_jobs, name='all_jobs'),
     path('public_jobs/', dummy, name='public_jobs'),
