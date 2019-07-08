@@ -38,8 +38,6 @@ class TestJSONRepresentation(TestCase):
                 "date": "21/06/2019",
                 "field": "some/a field",
                 "filter": "g Band",
-                "mary_run_template": None,
-                "mary_run_template_sequence_number": None,
                 "mary_seed_name": "rt",
                 "old_template_name": "my old template",
                 "steps": 20,
