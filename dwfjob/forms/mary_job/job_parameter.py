@@ -3,7 +3,6 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
 from django import forms
-from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from ...models import JobParameter
@@ -41,9 +40,31 @@ LABELS = {
 
 
 class JobParameterForm(forms.ModelForm):
+
+    def _populate_initial(self):
+        if self.fill_initial_from:
+            try:
+                job_parameter = JobParameter.objects.get(job=self.fill_initial_from)
+            except JobParameter.DoesNotExist:
+                pass
+            else:
+                self.fields['field'].initial = job_parameter.field
+                self.fields['template'].initial = job_parameter.template
+                self.fields['template_date'].initial = job_parameter.template_date
+                self.fields['mary_seed_name'].initial = job_parameter.mary_seed_name
+                self.fields['steps'].initial = job_parameter.steps
+                self.fields['clobber'].initial = job_parameter.clobber
+                self.fields['filter'].initial = job_parameter.filter
+                self.fields['old_template_name'].initial = job_parameter.old_template_name
+                self.fields['mary_run_template'].initial = job_parameter.mary_run_template
+                self.fields['mary_run_template_sequence_number'].initial = \
+                    job_parameter.mary_run_template_sequence_number
+                self.fields['image_names'].initial = job_parameter.image_names
+
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         self.job = kwargs.pop('job', None)
+        self.fill_initial_from = kwargs.pop('fill_initial_from', None)
         super(JobParameterForm, self).__init__(*args, **kwargs)
         self.fields['field'].widget.attrs.update({'class': 'form-control'})
         # setting up the UTC date as current date.
@@ -59,6 +80,8 @@ class JobParameterForm(forms.ModelForm):
         self.fields['mary_run_template'].widget.attrs.update({'class': 'form-control'})
         self.fields['mary_run_template_sequence_number'].widget.attrs.update({'class': 'form-control'})
         self.fields['image_names'].widget.attrs.update({'class': 'form-control'})
+
+        self._populate_initial()
 
     class Meta(object):
         model = JobParameter

@@ -2,11 +2,15 @@
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
+from django.db.models import Q
 from django.shortcuts import render, redirect
+
+from django_hpc_job_controller.client.scheduler.status import JobStatus
 
 from ..forms.mary_job.job import MaryJobForm
 from ..forms.mary_job.job_parameter import JobParameterForm
 from ..utility.job import DwfMaryJob
+from ..models import MaryJob
 
 
 def new_job(request):
@@ -39,8 +43,12 @@ def new_job(request):
                 return redirect('drafts')
 
     else:
-        job_form = MaryJobForm(prefix='job')
-        parameter_form = JobParameterForm(prefix='parameter')
+        last_submitted_job = MaryJob.objects\
+            .filter(~Q(job_status__in=[JobStatus.DRAFT, ]))\
+            .order_by('-job_pending_time').first()
+
+        job_form = MaryJobForm(prefix='job', fill_initial_from=last_submitted_job)
+        parameter_form = JobParameterForm(prefix='parameter', fill_initial_from=last_submitted_job)
 
     parameter_form.update_fields_to_required()
 

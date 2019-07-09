@@ -26,14 +26,22 @@ LABELS = {
 
 class MaryJobForm(forms.ModelForm):
     """
-    Start form class
+    Job form class
     """
+
+    def _populate_initial(self):
+        if self.fill_initial_from:
+            self.fields['description'].initial = self.fill_initial_from.description
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         self.job = kwargs.pop('job', None)
+        self.fill_initial_from = kwargs.pop('fill_initial_from', None)
         super(MaryJobForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
         self.fields['description'].widget.attrs.update({'class': 'form-control'})
+
+        self._populate_initial()
 
     class Meta:
         model = MaryJob
