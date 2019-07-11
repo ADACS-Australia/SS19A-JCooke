@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect
 
 from accounts.decorators import admin_or_system_admin_required
 from dwfcommon.utility.display_names import (
+    NONE,
     PUBLIC,
 )
 from dwfcommon.utility.utils import get_readable_size
@@ -356,6 +357,53 @@ def view_job(request, job_id):
     if not job:
         # should return to a page notifying that no permission to view
         raise Http404
+
+
+@login_required
+def make_job_private(request, job_id):
+    """
+    Marks a job as private if public.
+    :param request: Django request object.
+    :param job_id: id of the job.
+    :return: Redirects to the referrer page.
+    """
+
+    full_path = request.META.get('HTTP_REFERER', None)
+
+    if not full_path:
+        # not from a referrer, sorry
+        raise Http404
+
+    should_redirect = False
+
+    # checking:
+    # 1. Job ID and job exists
+    if job_id:
+        try:
+            job = MaryJob.objects.get(id=job_id)
+            mary_job = DwfMaryJob(job_id=job.id)
+            mary_job.list_actions(request.user)
+
+            # Checks that user has make_it_private permission
+            if 'make_it_private' in mary_job.job_actions:
+                job.extra_status = NONE
+                job.save()
+
+                should_redirect = True
+                messages.success(request, 'Job has been changed to <strong>private!</strong>', extra_tags='safe')
+
+        except MaryJob.DoesNotExist:
+            pass
+
+    # this should be the last line before redirect
+    if not should_redirect:
+        # should return to a page notifying that
+        # 1. no permission to view the job or
+        # 2. no job or
+        # 3. job does not have correct status
+        raise Http404
+
+    return redirect(full_path)
 
 
 @login_required
