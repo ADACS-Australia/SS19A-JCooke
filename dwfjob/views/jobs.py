@@ -1,19 +1,58 @@
 """
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
-
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from accounts.decorators import admin_or_system_admin_required
+from dwfcommon.utility.display_names import (
+    PUBLIC,
+)
 from dwfcommon.utility.utils import get_readable_size
 
 from ..utility.constants import JOBS_PER_PAGE
 from ..utility.job import DwfMaryJob
 from ..models import MaryJob, JobStatus
+
+
+@login_required
+def public_jobs(request):
+    """
+    Collects all public jobs and renders them in template.
+    :param request: Django request object.
+    :return: Rendered template.
+    """
+
+    my_jobs = MaryJob.objects.filter(Q(extra_status__in=[PUBLIC, ])) \
+        .order_by('-last_updated', '-job_pending_time')
+
+    paginator = Paginator(my_jobs, JOBS_PER_PAGE)
+
+    page = request.GET.get('page')
+    job_list = paginator.get_page(page)
+
+    # creating mary jobs from jobs
+    # it will create a light job with list of actions this user can do based on the job status
+    mary_jobs = []
+    for job in job_list:
+        mary_job = DwfMaryJob(job_id=job.id, light=True)
+
+        if mary_job:
+            mary_job.list_actions(request.user)
+            mary_jobs.append(mary_job)
+
+    return render(
+        request,
+        "dwfjob/all-jobs.html",
+        {
+            'jobs': mary_jobs,
+            'public': True,
+        }
+    )
 
 
 @login_required
@@ -317,3 +356,49 @@ def view_job(request, job_id):
     if not job:
         # should return to a page notifying that no permission to view
         raise Http404
+
+
+@login_required
+def make_job_public(request, job_id):
+    """
+    Marks a job as public if private.
+    :param request: Django request object.
+    :param job_id: id of the job.
+    :return: Redirects to the referrer page.
+    """
+    full_path = request.META.get('HTTP_REFERER', None)
+
+    if not full_path:
+        # not from a referrer, sorry
+        raise Http404
+
+    should_redirect = False
+
+    # checking:
+    # 1. Job ID and job exists
+    if job_id:
+        try:
+            job = MaryJob.objects.get(id=job_id)
+            mary_job = DwfMaryJob(job_id=job.id)
+            mary_job.list_actions(request.user)
+
+            # Checks that user has make_it_public permission
+            if 'make_it_public' in mary_job.job_actions:
+                job.extra_status = PUBLIC
+                job.save()
+
+                should_redirect = True
+                messages.success(request, 'Job has been changed to <strong>public!</strong>', extra_tags='safe')
+
+        except MaryJob.DoesNotExist:
+            pass
+
+    # this should be the last line before redirect
+    if not should_redirect:
+        # should return to a page notifying that
+        # 1. no permission to view the job or
+        # 2. no job or
+        # 3. job does not have correct status
+        raise Http404
+
+    return redirect(full_path)

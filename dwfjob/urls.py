@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 from .views.job import *
 from .views.jobs import (
+    public_jobs,
     jobs,
     all_jobs,
     drafts,
@@ -14,6 +15,7 @@ from .views.jobs import (
     deleted_jobs,
     all_deleted_jobs,
     view_job,
+    make_job_public,
 )
 
 urlpatterns = [
@@ -23,11 +25,11 @@ urlpatterns = [
     path('copy_job/<job_id>/', login_required(dummy), name='copy_job'),
     path('delete_job/<job_id>/', login_required(dummy), name='delete_job'),
     path('make_job_private/<job_id>/', login_required(dummy), name='make_job_private'),
-    path('make_job_public/<job_id>/', login_required(dummy), name='make_job_public'),
+    path('make_job_public/<job_id>/', make_job_public, name='make_job_public'),
     path('job/<job_id>/', view_job, name='job'),
     path('jobs/', jobs, name='jobs'),
     path('all_jobs/', all_jobs, name='all_jobs'),
-    path('public_jobs/', dummy, name='public_jobs'),
+    path('public_jobs/', public_jobs, name='public_jobs'),
     path('deleted_jobs/', deleted_jobs, name='deleted_jobs'),
     path('all_deleted_jobs/', all_deleted_jobs, name='all_deleted_jobs'),
     path('drafts/', drafts, name='drafts'),
