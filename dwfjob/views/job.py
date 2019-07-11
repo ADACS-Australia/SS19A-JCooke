@@ -2,6 +2,7 @@
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
 
@@ -13,6 +14,7 @@ from ..utility.job import DwfMaryJob
 from ..models import MaryJob
 
 
+@login_required
 def new_job(request):
     if request.method == 'POST':
         job_form = MaryJobForm(request.POST, request=request, prefix='job')

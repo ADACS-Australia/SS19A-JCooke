@@ -360,6 +360,44 @@ def view_job(request, job_id):
 
 
 @login_required
+def edit_job(request, job_id):
+    """
+    Checks job permission for edit and then redirects to relevant view.
+    :param request: Django request object.
+    :param job_id: id of the job.
+    :return: Redirects to relevant view.
+    """
+
+    job = None
+
+    # checking:
+    # 1. Job ID and job exists
+    if job_id:
+        try:
+            job = MaryJob.objects.get(id=job_id)
+
+            # Checks the edit permission for the user
+            mary_job = DwfMaryJob(job_id=job.id, light=True)
+            mary_job.list_actions(request.user)
+
+            if 'edit' not in mary_job.job_actions:
+                job = None
+        except MaryJob.DoesNotExist:
+            pass
+
+    # this should be the last line before redirect
+    if not job:
+        # should return to a page notifying that no permission to edit
+        raise Http404
+    else:
+
+        # loading job as draft and redirecting to the new job view
+        request.session['to_load'] = job.as_json()
+
+    return redirect('new_job')
+
+
+@login_required
 def make_job_private(request, job_id):
     """
     Marks a job as private if public.
