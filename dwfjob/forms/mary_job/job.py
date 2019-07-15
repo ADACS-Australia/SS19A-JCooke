@@ -30,13 +30,16 @@ class MaryJobForm(forms.ModelForm):
     """
 
     def _populate_initial(self):
-        if self.fill_initial_from:
-            self.fields['description'].initial = self.fill_initial_from.description
+        if self.job:
+            self.fields['description'].initial = self.job.description
+
+            if self.editing_draft:
+                self.fields['name'].initial = self.job.name
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         self.job = kwargs.pop('job', None)
-        self.fill_initial_from = kwargs.pop('fill_initial_from', None)
+        self.editing_draft = kwargs.pop('editing_draft', None)
         super(MaryJobForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
         self.fields['description'].widget.attrs.update({'class': 'form-control'})

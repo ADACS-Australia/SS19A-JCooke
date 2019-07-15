@@ -17,7 +17,15 @@ from ..models import MaryJob
 @login_required
 def new_job(request):
     if request.method == 'POST':
-        job_form = MaryJobForm(request.POST, request=request, prefix='job')
+
+        to_load_job = None
+        if request.session['draft_job']:
+            try:
+                to_load_job = MaryJob.objects.get(id=request.session['draft_job'].get('id', None))
+            except MaryJob.DoesNotExist:
+                pass
+
+        job_form = MaryJobForm(request.POST, request=request, job=to_load_job, prefix='job')
         parameter_form = JobParameterForm(request.POST, user=request.user, prefix='parameter')
 
         if all([job_form.is_valid(), parameter_form.is_valid(), ]):
@@ -45,12 +53,37 @@ def new_job(request):
                 return redirect('drafts')
 
     else:
-        last_submitted_job = MaryJob.objects\
-            .filter(~Q(job_status__in=[JobStatus.DRAFT, ]))\
-            .order_by('-job_pending_time').first()
 
-        job_form = MaryJobForm(prefix='job', fill_initial_from=last_submitted_job)
-        parameter_form = JobParameterForm(prefix='parameter', fill_initial_from=last_submitted_job)
+        editing_draft = False
+
+        try:
+            request.session['draft_job'] = request.session['to_load']
+        except (AttributeError, KeyError):
+            request.session['draft_job'] = None
+
+        if request.session['draft_job']:
+            try:
+                to_load_job = MaryJob.objects.get(id=request.session['draft_job'].get('id', None))
+                editing_draft = True
+            except MaryJob.DoesNotExist:
+                to_load_job = None
+
+            request.session['to_load'] = None
+        else:
+
+            to_load_job = MaryJob.objects\
+                .filter(~Q(job_status__in=[JobStatus.DRAFT, ]))\
+                .order_by('-job_pending_time').first()
+
+        job_form = MaryJobForm(
+            prefix='job',
+            job=to_load_job,
+            editing_draft=editing_draft,
+        )
+        parameter_form = JobParameterForm(
+            prefix='parameter',
+            job=to_load_job,
+        )
 
     parameter_form.update_fields_to_required()
 

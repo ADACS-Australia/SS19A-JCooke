@@ -42,9 +42,9 @@ LABELS = {
 class JobParameterForm(forms.ModelForm):
 
     def _populate_initial(self):
-        if self.fill_initial_from:
+        if self.job:
             try:
-                job_parameter = JobParameter.objects.get(job=self.fill_initial_from)
+                job_parameter = JobParameter.objects.get(job=self.job)
             except JobParameter.DoesNotExist:
                 pass
             else:
@@ -64,7 +64,6 @@ class JobParameterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         self.job = kwargs.pop('job', None)
-        self.fill_initial_from = kwargs.pop('fill_initial_from', None)
         super(JobParameterForm, self).__init__(*args, **kwargs)
         self.fields['field'].widget.attrs.update({'class': 'form-control'})
         # setting up the UTC date as current date.
@@ -104,8 +103,6 @@ class JobParameterForm(forms.ModelForm):
         :return: instance of the model
         """
         self.full_clean()
-        # data = self.cleaned_data
-
         # create default data dictionary
         data_dict = {}
         for field_name in self.fields:
