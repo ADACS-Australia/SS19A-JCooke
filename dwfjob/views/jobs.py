@@ -14,6 +14,7 @@ from django.shortcuts import render, redirect
 from accounts.decorators import admin_or_system_admin_required
 from dwfcommon.utility.display_names import (
     NONE,
+    DRAFT,
     PUBLIC,
 )
 from dwfcommon.utility.utils import get_readable_size
@@ -445,6 +446,87 @@ def copy_job(request, job_id):
         request.session['to_load'] = job.as_json()
 
     return redirect('new_job')
+
+
+@login_required
+def delete_job(request, job_id):
+    """
+    Deletes or marks a job as deleted.
+    :param request: Django request object.
+    :param job_id: id of the job.
+    :return: Redirects to relevant view.
+    """
+
+    should_redirect = False
+    # to decide which page to forward if not coming from any http referrer.
+    # this happens when you type in the url.
+    to_page = 'drafts'
+
+    # checking:
+    # 1. Job ID and job exists
+    if job_id:
+        try:
+            job = MaryJob.objects.get(id=job_id)
+            mary_job = DwfMaryJob(job_id=job.id, light=True)
+            mary_job.list_actions(request.user)
+
+            # checks that user has delete permission
+            if 'delete' not in mary_job.job_actions:
+                should_redirect = False
+            else:
+
+                message = 'Job <strong>{name}</strong> has been successfully deleted'.format(name=job.name)
+
+                if job.status == DRAFT:
+
+                    # draft jobs are to be deleted forever as they do not have any connection with the cluster yet.
+                    job.delete()
+
+                else:
+
+                    # for other jobs, they are marked as deleting and control is handed over to the workflow.
+                    job.delete_job()
+
+                    # cancelling the public status if deleted
+                    job.extra_status = NONE
+                    job.save()
+
+                    to_page = 'jobs'
+
+                messages.add_message(request, messages.SUCCESS, message, extra_tags='safe')
+                should_redirect = True
+
+        except MaryJob.DoesNotExist:
+            pass
+
+    if not should_redirect:
+        # should return to a page notifying that no permission to delete
+        raise Http404
+
+    # returning to the right page with pagination on
+    page = 1
+    full_path = request.META.get('HTTP_REFERER', None)
+    if full_path and ('/drafts/' in full_path or '/jobs/' in full_path or '/public_jobs/' in full_path):
+        if '?' in full_path:
+            query_string = full_path.split('?')[1].split('&')
+            for q in query_string:
+                if q.startswith('page='):
+                    page = q.split('=')[1]
+
+        # redirect to the correct url
+        if '/drafts/' in full_path:
+            response = redirect('drafts')
+        elif '/public_jobs/' in full_path:
+            response = redirect('public_jobs')
+        else:
+            response = redirect('jobs')
+
+        response['Location'] += '?page={0}'.format(page)
+
+    else:
+        response = redirect(to_page)
+
+    return response
 
 
 @login_required

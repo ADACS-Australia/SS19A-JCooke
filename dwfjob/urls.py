@@ -16,6 +16,7 @@ from .views.jobs import (
     view_job,
     edit_job,
     copy_job,
+    delete_job,
     make_job_private,
     make_job_public,
 )
@@ -25,7 +26,7 @@ urlpatterns = [
     path('edit_job/<job_id>/', edit_job, name='edit_job'),
     path('cancel_job/<job_id>/', dummy, name='cancel_job'),
     path('copy_job/<job_id>/', copy_job, name='copy_job'),
-    path('delete_job/<job_id>/', dummy, name='delete_job'),
+    path('delete_job/<job_id>/', delete_job, name='delete_job'),
     path('make_job_private/<job_id>/', make_job_private, name='make_job_private'),
     path('make_job_public/<job_id>/', make_job_public, name='make_job_public'),
     path('job/<job_id>/', view_job, name='job'),
