@@ -4,7 +4,7 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 
 from django.urls import path
 
-from .views.job import *
+from .views.job import new_job
 from .views.jobs import (
     public_jobs,
     jobs,
@@ -16,6 +16,7 @@ from .views.jobs import (
     view_job,
     edit_job,
     copy_job,
+    cancel_job,
     delete_job,
     make_job_private,
     make_job_public,
@@ -24,7 +25,7 @@ from .views.jobs import (
 urlpatterns = [
     path('new_job/', new_job, name='new_job'),
     path('edit_job/<job_id>/', edit_job, name='edit_job'),
-    path('cancel_job/<job_id>/', dummy, name='cancel_job'),
+    path('cancel_job/<job_id>/', cancel_job, name='cancel_job'),
     path('copy_job/<job_id>/', copy_job, name='copy_job'),
     path('delete_job/<job_id>/', delete_job, name='delete_job'),
     path('make_job_private/<job_id>/', make_job_private, name='make_job_private'),

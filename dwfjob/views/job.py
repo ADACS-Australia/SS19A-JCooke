@@ -97,10 +97,3 @@ def new_job(request):
             'submit_text': 'Launch',
         }
     )
-
-
-def dummy(request):
-    return render(
-        request,
-        "dwfcommon/about.html"
-    )
