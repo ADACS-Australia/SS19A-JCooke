@@ -42,6 +42,7 @@ def clone_job_data(from_job, to_job):
             old_template_name=from_job_parameter.old_template_name,
             mary_run_template=from_job_parameter.mary_run_template,
             mary_run_template_sequence_number=from_job_parameter.mary_run_template_sequence_number,
+            image_names=from_job_parameter.image_names,
         )
     except JobParameter.DoesNotExist:
         pass

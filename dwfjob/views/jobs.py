@@ -1,6 +1,9 @@
 """
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
+
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -18,6 +21,9 @@ from dwfcommon.utility.utils import get_readable_size
 from ..utility.constants import JOBS_PER_PAGE
 from ..utility.job import DwfMaryJob
 from ..models import MaryJob, JobStatus
+
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -388,6 +394,50 @@ def edit_job(request, job_id):
     # this should be the last line before redirect
     if not job:
         # should return to a page notifying that no permission to edit
+        raise Http404
+    else:
+
+        # loading job as draft and redirecting to the new job view
+        request.session['to_load'] = job.as_json()
+
+    return redirect('new_job')
+
+
+@login_required
+def copy_job(request, job_id):
+    """
+    Copies a particular job as a draft.
+    :param request: Django request object.
+    :param job_id: id of the job.
+    :return: Redirects to relevant view.
+    """
+
+    job = None
+
+    # checking:
+    # 1. Job ID and job exists
+    if job_id:
+        try:
+            job = MaryJob.objects.get(id=job_id)
+
+            # Check whether user can copy the job
+            mary_job = DwfMaryJob(job_id=job.id, light=True)
+            mary_job.list_actions(request.user)
+
+            if 'copy' not in mary_job.job_actions:
+                job = None
+            else:
+                job = mary_job.clone_as_draft(request.user)
+                if not job:
+                    logger.info('Cannot copy job due to name length, job id: {}'.format(mary_job.job.id))
+                    # should return error about name length
+                    pass
+        except MaryJob.DoesNotExist:
+            pass
+
+    # this should be the last line before redirect
+    if not job:
+        # should return to a page notifying that no permission to copy
         raise Http404
     else:
 
