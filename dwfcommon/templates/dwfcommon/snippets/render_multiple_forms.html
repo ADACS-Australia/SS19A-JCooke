@@ -6,27 +6,28 @@
         {% csrf_token %}
         {% include 'dwfcommon/snippets/messages.html' %}
         {% for form in forms %}
-            {% for field in form %}
-                <div id="div-{{ field.auto_id }}" class="field-container">
-                    <div class="row field {% if field.errors %}error{% endif %}">
-                        <label class="col col-md-4 text-md-right" for="{{ field.auto_id }}">
-                            {{ field.label }} {% if field.field.required %}*{% endif %}
-                        </label>
-                        <div class="col col-md-8">
-                            {{ field }}
-                            {{ field.errors }}
-                        </div>
-                    </div>
-                </div>
-                {% if field|field_type == 'DateInput' %}
-                    <script>
-                      $('#{{ field.auto_id }}').datepicker({
-                        uiLibrary: 'bootstrap4',
-                        format: 'dd/mm/yyyy'
-                      })
-                    </script>
-                {% endif %}
-            {% endfor %}
+{#            {% for field in form %}#}
+{#                <div id="div-{{ field.auto_id }}" class="field-container">#}
+{#                    <div class="row field {% if field.errors %}error{% endif %}">#}
+{#                        <label class="col col-md-4 text-md-right" for="{{ field.auto_id }}">#}
+{#                            {{ field.label }} {% if field.field.required %}*{% endif %}#}
+{#                        </label>#}
+{#                        <div class="col col-md-8">#}
+{#                            {{ field }}#}
+{#                            {{ field.errors }}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                {% if field|field_type == 'DateInput' %}#}
+{#                    <script>#}
+{#                      $('#{{ field.auto_id }}').datepicker({#}
+{#                        uiLibrary: 'bootstrap4',#}
+{#                        format: 'dd/mm/yyyy'#}
+{#                      })#}
+{#                    </script>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+            {% include 'dwfcommon/snippets/render_field.html' %}
         {% endfor %}
         <div class="row">
             <div class="buttons col col-md-12 text-md-right">

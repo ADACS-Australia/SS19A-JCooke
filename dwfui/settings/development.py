@@ -21,6 +21,12 @@ DATABASES = {
     },
 }
 
+# development version should have blank keys
+RECAPTCHA_PUBLIC_KEY = '6LfYRLkUAAAAAGQEz8EcQ8s0uTEaMMbQOxJlGigS'
+RECAPTCHA_PRIVATE_KEY = '6LfYRLkUAAAAAOLLXu3bXg5SPfucRDuS1efFrUL2'
+
+RECAPTCHA_REQUIRED_SCORE = 0.85
+
 for logger in LOGGING['loggers']:
     LOGGING['loggers'][logger]['handlers'] = ['console', 'file']
 
