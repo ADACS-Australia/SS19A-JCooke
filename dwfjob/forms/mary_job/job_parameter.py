@@ -20,7 +20,8 @@ FIELDS = [
     'old_template_name',
     'mary_run_template',
     'mary_run_template_sequence_number',
-    'image_names'
+    'image_names',
+    'run_dates',
 ]
 
 LABELS = {
@@ -36,6 +37,7 @@ LABELS = {
     'mary_run_template': _('Date of mary template'),
     'mary_run_template_sequence_number': _('Sequence number of previous mary run'),
     'image_names': _('6 digit code in the NOAO name'),
+    'run_dates': _('Run dates'),
 }
 
 
@@ -60,6 +62,7 @@ class JobParameterForm(forms.ModelForm):
                 self.fields['mary_run_template_sequence_number'].initial = \
                     job_parameter.mary_run_template_sequence_number
                 self.fields['image_names'].initial = job_parameter.image_names
+                self.fields['run_dates'].initial = job_parameter.run_dates
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -79,6 +82,7 @@ class JobParameterForm(forms.ModelForm):
         self.fields['mary_run_template'].widget.attrs.update({'class': 'form-control'})
         self.fields['mary_run_template_sequence_number'].widget.attrs.update({'class': 'form-control'})
         self.fields['image_names'].widget.attrs.update({'class': 'form-control'})
+        self.fields['run_dates'].widget.attrs.update({'class': 'form-control'})
 
         self._populate_initial()
 

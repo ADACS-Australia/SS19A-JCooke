@@ -10,7 +10,10 @@ from django_hpc_job_controller.models import HpcJob
 
 from dwfcommon.utility.display_names import *
 
-from .validators import validate_yymmdd_date
+from .validators import (
+    validate_yymmdd_date,
+    validate_cs_yymmdd_dates,
+)
 
 
 class MaryJob(HpcJob):
@@ -150,3 +153,5 @@ class JobParameter(models.Model):
             code='invalid_image_names',
         )
     ])
+
+    run_dates = models.CharField(max_length=2048, blank=False, null=False, validators=[validate_cs_yymmdd_dates, ])

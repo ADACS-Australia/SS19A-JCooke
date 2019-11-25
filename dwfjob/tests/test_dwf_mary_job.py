@@ -44,6 +44,7 @@ class TestJSONRepresentation(TestCase):
                 "template": "old_template",
                 "template_date": "190611",
                 "image_names": "",
+                "run_dates": "190507, 190505",
             }
         }
 
@@ -65,6 +66,7 @@ class TestJSONRepresentation(TestCase):
             old_template_name='my old template',
             mary_run_template=None,
             mary_run_template_sequence_number=None,
+            run_dates='190507, 190505',
         )
 
         dwf_mary_job = DwfMaryJob(job_id=mary_job.id)

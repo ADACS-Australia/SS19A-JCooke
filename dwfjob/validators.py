@@ -22,3 +22,19 @@ def validate_yymmdd_date(value):
             raise ValidationError(
                 _('Must be a date in yymmdd format')
             )
+
+
+def validate_cs_yymmdd_dates(value):
+    """
+    Validates multiple comma separated yymmdd dates
+    :param value: String containing dates in comma-separated format
+    :return: None
+    """
+    try:
+        dates = [x.strip() for x in value.split(',')]
+        for date in dates:
+            validate_yymmdd_date(date)
+    except ValidationError:
+        raise ValidationError(
+            _('Must be dates in yymmdd, yymmdd format')
+        )
