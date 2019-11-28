@@ -85,12 +85,15 @@ class JobParameter(models.Model):
 
     date = models.CharField(max_length=6, blank=False, null=False, validators=[validate_yymmdd_date, ])
 
+    MAKE_TEMPLATE = 'make_template'
+    MAKE_TEMPLATE_DISPLAY = 'Make Template'
     OLD_TEMPLATE = 'old_template'
     OLD_TEMPLATE_DISPLAY = 'Old Template'
     NEW_TEMPLATE = 'new_template'
     NEW_TEMPLATE_DISPLAY = 'New Template'
 
     TEMPLATE_CHOICES = [
+        (MAKE_TEMPLATE, MAKE_TEMPLATE_DISPLAY),
         (OLD_TEMPLATE, OLD_TEMPLATE_DISPLAY),
         (NEW_TEMPLATE, NEW_TEMPLATE_DISPLAY),
     ]
