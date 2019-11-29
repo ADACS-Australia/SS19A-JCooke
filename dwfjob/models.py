@@ -158,3 +158,11 @@ class JobParameter(models.Model):
     ])
 
     run_dates = models.CharField(max_length=2048, blank=False, null=False, validators=[validate_cs_yymmdd_dates, ])
+
+    template_images = models.CharField(max_length=6, blank=True, null=True, validators=[
+        RegexValidator(
+            regex='^[0-9]{6}$',
+            message='Must be a 6 digit code',
+            code='invalid_template_images',
+        )
+    ])
