@@ -84,6 +84,20 @@ class JobParameterForm(forms.ModelForm):
         self.fields['image_names'].widget.attrs.update({'class': 'form-control'})
         self.fields['run_dates'].widget.attrs.update({'class': 'form-control'})
 
+        self.fields['field'].widget.attrs.update({'for_template': 'old new make'})
+        self.fields['date'].widget.attrs.update({'for_template': 'old new make'})
+        self.fields['template'].widget.attrs.update({'for_template': 'old new make'})
+        self.fields['template_date'].widget.attrs.update({'for_template': 'old'})
+        self.fields['mary_seed_name'].widget.attrs.update({'for_template': 'old new'})
+        self.fields['steps'].widget.attrs.update({'for_template': 'old new'})
+        self.fields['clobber'].widget.attrs.update({'for_template': 'old new'})
+        self.fields['filter'].widget.attrs.update({'for_template': 'old new'})
+        self.fields['old_template_name'].widget.attrs.update({'for_template': 'old'})
+        self.fields['mary_run_template'].widget.attrs.update({'for_template': 'new'})
+        self.fields['mary_run_template_sequence_number'].widget.attrs.update({'for_template': 'new'})
+        self.fields['image_names'].widget.attrs.update({'for_template': 'old new'})
+        self.fields['run_dates'].widget.attrs.update({'for_template': 'old new'})
+
         self._populate_initial()
 
     class Meta(object):
