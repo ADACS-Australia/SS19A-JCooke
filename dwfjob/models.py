@@ -166,3 +166,5 @@ class JobParameter(models.Model):
             code='invalid_template_images',
         )
     ])
+
+    last_mary_run = models.IntegerField(blank=False, null=False)

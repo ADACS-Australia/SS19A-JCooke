@@ -23,6 +23,7 @@ FIELDS = [
     'image_names',
     'run_dates',
     'template_images',
+    'last_mary_run',
 ]
 
 LABELS = {
@@ -40,6 +41,7 @@ LABELS = {
     'image_names': _('6 digit code in the NOAO name'),
     'run_dates': _('Run dates'),
     'template_images': _('Template Images'),
+    'last_mary_run': _('Last mary run'),
 }
 
 
@@ -66,6 +68,7 @@ class JobParameterForm(forms.ModelForm):
                 self.fields['image_names'].initial = job_parameter.image_names
                 self.fields['run_dates'].initial = job_parameter.run_dates
                 self.fields['template_images'].initial = job_parameter.template_images
+                self.fields['last_mary_run'].initial = job_parameter.last_mary_run
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -87,6 +90,7 @@ class JobParameterForm(forms.ModelForm):
         self.fields['image_names'].widget.attrs.update({'class': 'form-control'})
         self.fields['run_dates'].widget.attrs.update({'class': 'form-control'})
         self.fields['template_images'].widget.attrs.update({'class': 'form-control'})
+        self.fields['last_mary_run'].widget.attrs.update({'class': 'form-control'})
 
         self.fields['field'].widget.attrs.update({'for_template': 'old new make'})
         self.fields['date'].widget.attrs.update({'for_template': 'old new make'})
@@ -102,6 +106,7 @@ class JobParameterForm(forms.ModelForm):
         self.fields['image_names'].widget.attrs.update({'for_template': 'old new make'})
         self.fields['run_dates'].widget.attrs.update({'for_template': 'old new make'})
         self.fields['template_images'].widget.attrs.update({'for_template': 'make'})
+        self.fields['last_mary_run'].widget.attrs.update({'for_template': 'old new make'})
 
         self._populate_initial()
 

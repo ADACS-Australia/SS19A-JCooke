@@ -44,6 +44,8 @@ def clone_job_data(from_job, to_job):
             mary_run_template_sequence_number=from_job_parameter.mary_run_template_sequence_number,
             image_names=from_job_parameter.image_names,
             run_dates=from_job_parameter.run_dates,
+            template_images=from_job_parameter.template_images,
+            last_mary_run=from_job_parameter.last_mary_run,
         )
     except JobParameter.DoesNotExist:
         pass
@@ -143,9 +145,16 @@ class DwfMaryJob(object):
             if self.job_parameter.template == JobParameter.OLD_TEMPLATE:
                 skip_fields.append('mary_run_template')
                 skip_fields.append('mary_run_template_sequence_number')
+                skip_fields.append('template_images')
             elif self.job_parameter.template == JobParameter.NEW_TEMPLATE:
                 skip_fields.append('old_template_name')
                 skip_fields.append('template_date')
+                skip_fields.append('template_images')
+            elif self.job_parameter.template == JobParameter.MAKE_TEMPLATE:
+                skip_fields.append('old_template_name')
+                skip_fields.append('template_date')
+                skip_fields.append('mary_run_template')
+                skip_fields.append('mary_run_template_sequence_number')
 
             for field in fields:
                 if field.name not in skip_fields:

@@ -34,5 +34,6 @@ class JobParameter(admin.ModelAdmin):
         'image_names',
         'run_dates',
         'template_images',
+        'last_mary_run',
     )
     search_fields = ['job__name', 'date']
