@@ -24,8 +24,6 @@
                 <th scope="col">Name</th>
                 <th>{% if drafts %}Creation{% else %}Launch{% endif %} Time</th>
                 <th>Last Updated</th>
-                {% if not drafts and not public and not deleted %}
-                    <th>Status</th>{% endif %}
                 {% if public or admin_view %}
                     <th>Owner</th>{% endif %}
                 <th>Action(s)</th>
@@ -39,8 +37,6 @@
                     <td>{% if drafts %}{{ mary_job.job.creation_time }}{% else %}
                         {{ mary_job.job.job_pending_time }}{% endif %}</td>
                     <td>{{ mary_job.job.last_updated }}</td>
-                    {% if not drafts and not public and not deleted %}
-                        <td>{{ mary_job.job.status_display }}</td>{% endif %}
                     {% if public or admin_view %}
                         <td>{{ mary_job.job.user.display_name }}</td>{% endif %}
                     <td>
@@ -52,10 +48,6 @@
                         {% if 'edit' in mary_job.job_actions %}
                             <a class="text-primary" href="{% url 'edit_job' mary_job.job.id %}">Edit <i
                                     class="fas fa-edit"></i></a>
-                        {% endif %}
-                        {% if 'cancel' in mary_job.job_actions %}
-                            <a class="text-dark cancel-job" data-toggle="modal" data-target="#cancelJob"
-                               href="{% url 'cancel_job' mary_job.job.id %}">Cancel <i class="far fa-stop-circle"></i></a>
                         {% endif %}
                         {% if 'copy' in mary_job.job_actions %}
                             <a class="text-info" href="{% url 'copy_job' mary_job.job.id %}">Copy <i
