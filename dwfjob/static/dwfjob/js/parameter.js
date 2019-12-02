@@ -3,63 +3,39 @@
  */
 
 $(document).ready(function () {
-    var new_template = 'new_template'
-    var old_template = 'old_template'
+    function hide_divs(divs) {
+        $.each(divs, function () {
+            const detached_div = $(this).detach()
+            detached_div.appendTo('#form_store')
+        })
+    }
 
-    var old_template_elements = []
-    old_template_elements.push($('#div-id_parameter-template_date').children(":first").addClass('div-id_parameter-template_date'))
-    old_template_elements.push($('#div-id_parameter-old_template_name').children(":first").addClass('div-id_parameter-old_template_name'))
+    function restore_divs_by_template(template_name) {
+        let target_id = null;
+        $('.row.field.' + template_name).each(function(){
+            target_id = $(this).attr('id').replace('inner-', '')
+            const detached_div = $(this).detach();
+            detached_div.appendTo($('#' + target_id))
+        })
+    }
 
-    old_template_elements.forEach(function (element) {
-        element.addClass(old_template)
-    })
+    let elements = [];
 
-    var new_template_elements = []
-    new_template_elements.push($('#div-id_parameter-mary_run_template').children(":first").addClass('div-id_parameter-mary_run_template'))
-    new_template_elements.push($('#div-id_parameter-mary_run_template_sequence_number').children(":first").addClass('div-id_parameter-mary_run_template_sequence_number'))
+    $('[id^="div-id_parameter-"]').each(function () {
+        let name = $(this).attr('id');
 
-    new_template_elements.forEach(function (element) {
-        element.addClass(new_template)
-    })
+        if (name !== "div-id_parameter-template") {
+            elements.push($(this).children(":first"));
+        }
+    });
 
     $('#id_parameter-template').each(function () {
-        var divs = []
-
-        if ($(this).val() === new_template) {
-            divs = old_template_elements
-        }
-
-        if ($(this).val() === old_template) {
-            divs = new_template_elements
-        }
-
-        hide_divs(divs)
+        hide_divs(elements);
+        restore_divs_by_template($(this).val().split("_")[0]);
 
         $(this).change(function () {
-            divs = old_template_elements.concat(new_template_elements)
-            hide_divs(divs)
-
-            restore_divs_by_class($(this).val())
+            hide_divs(elements);
+            restore_divs_by_template($(this).val().split("_")[0])
         })
-
-        function restore_divs_by_class(template_name) {
-            var class_name = null
-            var target_id = null
-
-            $('.' + template_name).each(function () {
-                var class_names = $(this).attr('class').split(" ")
-                target_id = class_names.slice(-2, -1)[0]
-                class_name = "." + target_id + "." + class_names.slice(-1)[0]
-                var detached_div = $(class_name).detach()
-                detached_div.appendTo($('#' + target_id))
-            })
-        }
-
-        function hide_divs(divs) {
-            $.each(divs, function () {
-                var detached_div = $(this).detach()
-                detached_div.appendTo('#form_store')
-            })
-        }
     })
 })
