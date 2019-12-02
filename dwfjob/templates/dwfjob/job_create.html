@@ -1,0 +1,23 @@
+{% extends 'dwfcommon/base/base.html' %}
+{% load static %}
+
+{% block page_header %}
+    {{ page_header }} Mary Job
+{% endblock page_header %}
+
+{% block additional_styles %}
+    <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+{% endblock additional_styles %}
+
+{% block additional_javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="{% static 'dwfjob/js/parameter.js' %}"></script>
+{% endblock additional_javascript %}
+
+{% block content %}
+    <div class="single-form-wrapper mx-auto">
+    {% include 'dwfcommon/snippets/render_multiple_forms.html' %}
+    </div>
+
+    <div id="form_store" style="display: none"></div>
+{% endblock content %}

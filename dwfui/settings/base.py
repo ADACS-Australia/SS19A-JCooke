@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_hpc_job_controller',
+    'captcha',
     'dwfjob',
     'dwfsearch',
     'dwfcommon',
@@ -143,6 +145,14 @@ EMAIL_HOST = 'mail.swin.edu.au'
 EMAIL_FROM = 'hpc-support@swin.edu.au'
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
+
+# update these keys in in local settings or relative environment settings
+RECAPTCHA_PUBLIC_KEY = 'MyRecaptchaKey123'
+RECAPTCHA_PRIVATE_KEY = 'MyRecaptchaPrivateKey456'
+
+RECAPTCHA_DOMAIN = 'www.recaptcha.net'
+
+RECAPTCHA_REQUIRED_SCORE = 0.85
 
 # Customised user model
 AUTH_USER_MODEL = 'accounts.User'

@@ -1,2 +1,4 @@
 Django==2.2.1
 six
+mysqlclient
+django-recaptcha==2.0.5
