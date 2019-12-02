@@ -108,7 +108,7 @@ def list_job_actions(job, user):
     job_actions = []
 
     # DWFJob Owners and Admins get most actions
-    if job.user == user or user.is_admin():
+    if job.user == user or user.is_admin:
 
         # any job can be copied
         job_actions.append('copy')
