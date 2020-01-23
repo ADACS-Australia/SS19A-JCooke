@@ -149,10 +149,10 @@ class JobParameter(models.Model):
 
     mary_run_template_sequence_number = models.CharField(max_length=255, blank=True, null=True)
 
-    image_names = models.CharField(max_length=6, blank=False, null=False, validators=[
+    image_names = models.CharField(max_length=2048, blank=False, null=False, validators=[
         RegexValidator(
-            regex='^[0-9]{6}$',
-            message='Must be a 6 digit code',
+            regex='^[0-9]{6}(\s*,\s*[0-9]{6})*$',
+            message='Must be comma separated 6 digit codes',
             code='invalid_image_names',
         )
     ])
