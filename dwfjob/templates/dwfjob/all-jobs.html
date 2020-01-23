@@ -23,7 +23,6 @@
             <tr>
                 <th scope="col">Name</th>
                 <th>{% if drafts %}Creation{% else %}Launch{% endif %} Time</th>
-                <th>Last Updated</th>
                 {% if public or admin_view %}
                     <th>Owner</th>{% endif %}
                 <th>Action(s)</th>
@@ -36,7 +35,6 @@
                             href="{% url 'job' mary_job.job.id %}">{{ mary_job.job.name }}</a></th>
                     <td>{% if drafts %}{{ mary_job.job.creation_time }}{% else %}
                         {{ mary_job.job.job_pending_time }}{% endif %}</td>
-                    <td>{{ mary_job.job.last_updated }}</td>
                     {% if public or admin_view %}
                         <td>{{ mary_job.job.user.display_name }}</td>{% endif %}
                     <td>
