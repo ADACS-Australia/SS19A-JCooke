@@ -40,7 +40,7 @@ LABELS = {
     'mary_run_template_sequence_number': _('Sequence number of previous mary run'),
     'image_names': _('6 digit code in the NOAO name'),
     'run_dates': _('Run dates'),
-    'template_images': _('Template Images'),
+    'template_images': _('Template images'),
     'last_mary_run': _('Last mary run'),
 }
 
