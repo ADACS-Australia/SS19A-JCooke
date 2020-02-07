@@ -115,20 +115,12 @@ def list_job_actions(job, user):
 
         # job can only be deleted if in the following status:
         # 1. draft
-        # 2. completed
-        # 3. error (wall time and out of memory)
-        # 4. cancelled
-        # 5. public
-        if job.status in [DRAFT, COMPLETED, ERROR, CANCELLED, WALL_TIME_EXCEEDED, OUT_OF_MEMORY, PUBLIC]:
+        if job.status in [DRAFT]:
             job_actions.append('delete')
 
         # edit a job if it is a draft
         if job.status in [DRAFT]:
             job_actions.append('edit')
-
-        # cancel a job if it is not finished processing
-        if job.status in [PENDING, SUBMITTED, QUEUED, IN_PROGRESS]:
-            job_actions.append('cancel')
 
         # completed job can be public and vice versa
         if job.status in [COMPLETED]:

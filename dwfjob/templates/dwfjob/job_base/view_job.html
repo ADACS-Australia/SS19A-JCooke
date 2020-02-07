@@ -197,9 +197,6 @@
 
     {% endif %}
 
-    {% block output_and_download %}
-    {% endblock output_and_download %}
-
     <div class="job-view-section">
         <div class="row">
             <div class="col col-md-12">
@@ -220,25 +217,13 @@
                     </tr>
                 {% endif %}
                 <tr>
-                    <th scope="row">Creation Time</th>
+                    <th scope="row">Creation time</th>
                     <td>{{ mary_job.job.creation_time }}</td>
                 </tr>
                 {% if mary_job.job.job_pending_time %}
                     <tr>
-                        <th scope="row">Launch Time</th>
+                        <th scope="row">Launch time</th>
                         <td>{{ mary_job.job.job_pending_time }}</td>
-                    </tr>
-                {% endif %}
-                {% if mary_job.job.job_running_time %}
-                    <tr>
-                        <th scope="row">Job Run Start Time</th>
-                        <td>{{ mary_job.job.job_running_time }}</td>
-                    </tr>
-                {% endif %}
-                {% if mary_job.job.job_finished_time %}
-                    <tr>
-                        <th scope="row">Job Finished Time</th>
-                        <td>{{ mary_job.job.job_finished_time }}</td>
                     </tr>
                 {% endif %}
                 </tbody>

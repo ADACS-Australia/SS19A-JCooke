@@ -11,6 +11,16 @@ services:
       - ./static:/static
     depends_on:
       - web
+  db:
+    image: mysql:5.7
+    container_name: mysql_dwf
+    environment:
+      MYSQL_ROOT_PASSWORD: dwf2019
+      MYSQL_DATABASE: dwf
+      MYSQL_USER: dwf
+      MYSQL_PASSWORD: dwf2019
+    volumes:
+      - ./mysql:/var/lib/mysql
   web:
     build: ./
     container_name: dg_dwf
@@ -19,10 +29,13 @@ services:
       && python manage.py makemigrations
       && python manage.py migrate
       && python manage.py collectstatic --noinput
+      && chown 101:101 -R /static
       && gunicorn dwfui.wsgi -b 0.0.0.0:8000"
     ports:
       - "8000"
     volumes:
       - ./:/code
       - ./static:/static
+    depends_on:
+      - db
 
