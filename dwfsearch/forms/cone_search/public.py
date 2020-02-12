@@ -16,7 +16,7 @@ class ConeSearchForm(forms.Form):
         widget=forms.TextInput(
             attrs={'class': 'form-control', 'tabindex': '1'}
         ),
-        label=_('RA (H:M:S)'),
+        label=_('RA (HH:MM:SS)'),
         required=True,
     )
 
@@ -24,7 +24,7 @@ class ConeSearchForm(forms.Form):
         widget=forms.NumberInput(
             attrs={'class': 'form-control', 'tabindex': '2'}
         ),
-        label=_('DEC'),
+        label=_('DEC (degrees)'),
         required=True,
     )
 
@@ -32,7 +32,7 @@ class ConeSearchForm(forms.Form):
         widget=forms.NumberInput(
             attrs={'class': 'form-control', 'tabindex': '3'}
         ),
-        label=_('Search Radius'),
+        label=_('Search Radius (0-90)'),
         required=True,
     )
 
@@ -57,11 +57,26 @@ class ConeSearchForm(forms.Form):
         except (ValueError, TypeError):
             raise ValidationError(_('RA invalid'))
 
+    # def clean_dec(self):
+    #     dec = self.cleaned_data.get('dec').split(':')
+    #
+    #     try:
+    #         if not 0 <= int(dec[0]) <= 23 or not 0 <= int(dec[1]) <= 59 or not 0 <= int(dec[2]) <= 59:
+    #             raise ValidationError(_('DEC out of range [0:0:0, 23:59:59]'))
+    #     except (ValueError, TypeError):
+    #         raise ValidationError(_('DEC invalid'))
+
     def clean_dec(self):
         dec = self.cleaned_data.get('dec')
 
         if not -90 <= dec <= 90:
             raise ValidationError(_('DEC out of range [-90, +90]'))
+
+    def clean_radius(self):
+        radius = self.cleaned_data.get('radius')
+
+        if not 0 <= radius <= 90:
+            raise ValidationError(_('Radius out of range [0, 90]'))
 
     def get_search_query(self):
         query_parts = dict()

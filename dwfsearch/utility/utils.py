@@ -2,12 +2,7 @@
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
-from ..models import (
-    SearchColumn,
-    CoreMemberSearchColumn,
-    PublicSearchColumn,
-    CollaboratorSearchColumn,
-)
+from .. import constants
 
 
 class DisplayHeader(object):
@@ -26,22 +21,12 @@ def get_search_columns(user):
     if not user:
         return []
 
-    try:
-        if user.is_admin:
-            search_columns = CoreMemberSearchColumn.objects.values_list('column__name', flat=True) \
-                .order_by('display_order')
-        elif user.is_collaborator:
-            search_columns = CollaboratorSearchColumn.objects.values_list('column__name', flat=True) \
-                .order_by('display_order')
-        else:
-            search_columns = PublicSearchColumn.objects.values_list('column__name', flat=True) \
-                .order_by('display_order')
-    except (
-            CoreMemberSearchColumn.DoesNotExist,
-            CollaboratorSearchColumn.DoesNotExist,
-            PublicSearchColumn.DoesNotExist,
-    ):
-        search_columns = []
+    if user.is_admin:
+        search_columns = constants.ADMIN_SEARCH_COLUMNS
+    elif user.is_collaborator:
+        search_columns = constants.COLLABORATOR_SEARCH_COLUMNS
+    else:
+        search_columns = constants.PUBLIC_SEARCH_COLUMNS
 
     return search_columns
 
@@ -50,15 +35,12 @@ def search_display_headers(search_columns):
     display_headers = []
 
     for column in search_columns:
-        try:
-            display_headers.append(
-                DisplayHeader(
-                    name=column,
-                    display_name=SearchColumn.objects.get(name=column).display_name,
-                )
+        display_headers.append(
+            DisplayHeader(
+                name=column,
+                display_name=constants.SEARCH_DISPLAY_HEADERS.get(column, column),
             )
-        except SearchColumn.DoesNotExist:
-            pass
+        )
 
     return display_headers
 
