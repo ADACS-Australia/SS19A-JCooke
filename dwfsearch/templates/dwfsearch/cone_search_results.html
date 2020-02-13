@@ -9,7 +9,29 @@
     <link rel="stylesheet" href="{% static 'dwfcommon/style/data-list.css' %}"/>
 {% endblock additional_styles %}
 
+{% block additional_javascript %}
+    <script src="{% static 'dwfsearch/js/show_image.js' %}"></script>
+{% endblock additional_javascript %}
+
 {% block content %}
+
+    <div class="show-image">
+        {% for result in search_results %}
+            <div id="div-image-{{ result.id }}" class="row {% if forloop.counter != 1 %}d-none{% endif %}">
+                <div class="col col-md-6">
+                    <img src="http://skyservice.pha.jhu.edu/DR14/ImgCutout/getjpeg.aspx?ra={{ result.ra }}&dec={{ result.dec }}&scale=0.25&width=300&height=300&opt=G&query=&Grid=on"/>
+                </div>
+                <div class="col col-md-6">
+                    <ul> Image Properties:
+                        <li>ID = {{ result.id }}</li>
+                        <li>RA = {{ result.ra }}</li>
+                        <li>Dec = {{ result.dec }}</li>
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
     <div class="data-list table-responsive">
         <table class="table">
             <thead>
@@ -23,16 +45,15 @@
             <tbody>
             {% for result in search_results %}
                 <tr class="text-dark">
-                    {% for item in result %}
+                    {% for key, value in result.items %}
                         {% if forloop.counter == 1 %}
-                            <th scope="col" class="job-name"><a
-                                    href="">{{ item }}</a></th>
+                            <th scope="col" class="job-name"><a id="link-image-{{ value }}" href="#" class="link-id">{{ value }}</a></th>
                         {% else %}
-                            <td>{{ item }}</td>
+                            <td>{{ value }}</td>
                         {% endif %}
                     {% endfor %}
                     <td>
-                        <a href="">View</a>
+                        <a id="view-image-{{ result.id }}" href="#">View</a>
                     </td>
                 </tr>
             {% endfor %}

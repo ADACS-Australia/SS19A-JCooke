@@ -21,6 +21,11 @@ def search(query_parts, search_columns):
     target_name = query_parts.get('target_name', None)
     mary_run = query_parts.get('mary_id', None)
 
+    limit = 4
+    offset = 0
+    order_by_field = 'id'
+    order_by_direction = 'ASC'
+
     c = SkyCoord(
         '{}h{}m{}s'.format(ra[0], ra[1], ra[2]),
         dec*u.degree,
@@ -44,7 +49,10 @@ def search(query_parts, search_columns):
                     "WHERE "
                     "(spoint(radians(dwf.ra),radians(dwf.dec)) @ scircle(spoint(radians({}),radians({})),radians({}))) "
                     "AND mary_run BETWEEN {} AND {} "
-                    "AND sci_path LIKE {}"
+                    "AND sci_path LIKE {} "
+                    "ORDER BY {} "
+                    "LIMIT {} "
+                    "OFFSET {} "
                 ).format(
                     sql.SQL(",").join(map(sql.Identifier, search_columns)),
                     sql.Placeholder(),
@@ -52,6 +60,8 @@ def search(query_parts, search_columns):
                     sql.Placeholder(),
                     sql.Placeholder(),
                     sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.SQL(" ").join([sql.Identifier(order_by_field), sql.SQL(order_by_direction)]),
                     sql.Placeholder(),
                     sql.Placeholder(),
                 )
@@ -65,6 +75,8 @@ def search(query_parts, search_columns):
                         mary_run_min,
                         mary_run_max,
                         '%{}%'.format(target_name),
+                        limit,
+                        offset
                     ]
                 )
                 search_results = cursor.fetchall()
@@ -72,11 +84,4 @@ def search(query_parts, search_columns):
             except Exception as ex:
                 logger.log("Exception: ", ex)
 
-    data = {
-        'total': len(search_results),
-        'search_results': search_results,
-    }
-
-    json_response = json.dumps(data)
-    json_data = json.loads(json_response)
-    return json_data.get('search_results'), json_data.get('total')
+    return search_results, len(search_results)

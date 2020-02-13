@@ -12,7 +12,6 @@ from ..utility.api import search
 from ..utility.utils import (
     get_search_columns,
     search_display_headers,
-    process_search_results,
 )
 
 
@@ -34,7 +33,7 @@ def cone_search_result(request):
         request,
         "dwfsearch/cone_search_results.html",
         {
-            'search_results': process_search_results(search_results, search_columns),
+            'search_results': search_results,
             'display_headers': display_headers,
         },
     )

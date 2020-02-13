@@ -61,10 +61,10 @@ ADMIN_SEARCH_COLUMNS = [
     MJD,
     RA,
     DEC,
-    MARY_ID,
-    SCI_PATH,
-    SUB_PATH,
-    TEMP_PATH,
+    # MARY_ID,
+    # SCI_PATH,
+    # SUB_PATH,
+    # TEMP_PATH,
 ]
 
 COLLABORATOR_SEARCH_COLUMNS = [

@@ -43,15 +43,3 @@ def search_display_headers(search_columns):
         )
 
     return display_headers
-
-
-def process_search_results(search_result, search_columns):
-    processed_result = []
-
-    for result in search_result:
-        sorted_result = []
-        for column in search_columns:
-            sorted_result.append(result.get(column, None))
-        processed_result.append(sorted_result)
-
-    return processed_result
