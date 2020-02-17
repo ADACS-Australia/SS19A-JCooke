@@ -7,6 +7,7 @@
 
 {% block additional_styles %}
     <link rel="stylesheet" href="{% static 'dwfcommon/style/data-list.css' %}"/>
+    <link rel="stylesheet" href="{% static 'dwfcommon/style/pagination.css' %}"/>
 {% endblock additional_styles %}
 
 {% block additional_javascript %}
@@ -22,7 +23,7 @@
                     <img src="http://skyservice.pha.jhu.edu/DR14/ImgCutout/getjpeg.aspx?ra={{ result.ra }}&dec={{ result.dec }}&scale=0.25&width=300&height=300&opt=G&query=&Grid=on"/>
                 </div>
                 <div class="col col-md-6">
-                    <ul> Image Properties:
+                    <ul>Properties:
                         <li>ID = {{ result.id }}</li>
                         <li>RA = {{ result.ra }}</li>
                         <li>Dec = {{ result.dec }}</li>
@@ -60,4 +61,6 @@
             </tbody>
         </table>
     </div>
+
+    {% include 'dwfcommon/snippets/pagination.html' %}
 {% endblock content %}

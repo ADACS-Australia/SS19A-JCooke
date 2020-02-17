@@ -1,7 +1,7 @@
 """
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
-import json
+
 import logging
 import astropy.units as u
 
@@ -14,15 +14,13 @@ from .dwfdb import DWFDB
 logger = logging.getLogger(__name__)
 
 
-def search(query_parts, search_columns):
+def search(query_parts, search_columns, limit, offset):
     ra = query_parts.get('ra').split(':')
     dec = float(query_parts.get('dec'))
     radius = query_parts.get('radius')
     target_name = query_parts.get('target_name', None)
     mary_run = query_parts.get('mary_id', None)
 
-    limit = 4
-    offset = 0
     order_by_field = 'id'
     order_by_direction = 'ASC'
 
@@ -40,6 +38,7 @@ def search(query_parts, search_columns):
         mary_run_max = 2147483647
 
     search_results = None
+    total = 0
     with DWFDB() as db_connection:
         with db_connection.cursor(cursor_factory=RealDictCursor) as cursor:
             try:
@@ -84,4 +83,38 @@ def search(query_parts, search_columns):
             except Exception as ex:
                 logger.log("Exception: ", ex)
 
-    return search_results, len(search_results)
+            try:
+                total_str = sql.SQL(
+                    "SELECT COUNT(*) total "
+                    "FROM dwf "
+                    "WHERE "
+                    "(spoint(radians(dwf.ra),radians(dwf.dec)) @ scircle(spoint(radians({}),radians({})),radians({}))) "
+                    "AND mary_run BETWEEN {} AND {} "
+                    "AND sci_path LIKE {} "
+                ).format(
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                )
+
+                cursor.execute(
+                    total_str,
+                    [
+                        c.ra.deg,
+                        c.dec.deg,
+                        radius,
+                        mary_run_min,
+                        mary_run_max,
+                        '%{}%'.format(target_name),
+                    ]
+                )
+
+                total = cursor.fetchone().get('total', 0)
+
+            except Exception as ex:
+                logger.log("Exception: ", ex)
+
+    return search_results, total

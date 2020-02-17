@@ -1,3 +1,5 @@
+SEARCH_RESULT_PER_PAGE = 2
+
 ID = 'id'
 ID_DISPLAY = 'ID'
 FIELD = 'field'
@@ -79,10 +81,10 @@ COLLABORATOR_SEARCH_COLUMNS = [
     MJD,
     RA,
     DEC,
-    MARY_ID,
-    SCI_PATH,
-    SUB_PATH,
-    TEMP_PATH,
+    # MARY_ID,
+    # SCI_PATH,
+    # SUB_PATH,
+    # TEMP_PATH,
 ]
 
 PUBLIC_SEARCH_COLUMNS = [
@@ -97,5 +99,5 @@ PUBLIC_SEARCH_COLUMNS = [
     MJD,
     RA,
     DEC,
-    MARY_ID,
+    # MARY_ID,
 ]
