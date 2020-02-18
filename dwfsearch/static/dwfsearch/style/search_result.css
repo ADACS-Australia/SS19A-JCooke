@@ -1,0 +1,27 @@
+.show-image {
+    margin-bottom: 20px;
+    font-size: x-small;
+}
+
+.show-image .prop-header {
+    font-size: small;
+    font-weight: bold;
+    border-bottom: #343a40 1px dotted;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.show-image ul {
+    list-style: none;
+}
+
+.show-image ul li {
+    width: 49%;
+    display: inline-block;
+    padding: 5px 0;
+}
+
+.show-image ul li.full-block {
+    width: 100%;
+    display: block;
+}

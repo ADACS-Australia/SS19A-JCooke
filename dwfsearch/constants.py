@@ -1,4 +1,4 @@
-SEARCH_RESULT_PER_PAGE = 2
+SEARCH_RESULT_PER_PAGE = 10
 
 ID = 'id'
 ID_DISPLAY = 'ID'
@@ -63,10 +63,10 @@ ADMIN_SEARCH_COLUMNS = [
     MJD,
     RA,
     DEC,
-    # MARY_ID,
-    # SCI_PATH,
-    # SUB_PATH,
-    # TEMP_PATH,
+    MARY_ID,
+    SCI_PATH,
+    SUB_PATH,
+    TEMP_PATH,
 ]
 
 COLLABORATOR_SEARCH_COLUMNS = [
@@ -81,10 +81,10 @@ COLLABORATOR_SEARCH_COLUMNS = [
     MJD,
     RA,
     DEC,
-    # MARY_ID,
-    # SCI_PATH,
-    # SUB_PATH,
-    # TEMP_PATH,
+    MARY_ID,
+    SCI_PATH,
+    SUB_PATH,
+    TEMP_PATH,
 ]
 
 PUBLIC_SEARCH_COLUMNS = [
@@ -99,5 +99,5 @@ PUBLIC_SEARCH_COLUMNS = [
     MJD,
     RA,
     DEC,
-    # MARY_ID,
+    MARY_ID,
 ]

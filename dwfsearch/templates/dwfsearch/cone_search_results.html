@@ -8,6 +8,7 @@
 {% block additional_styles %}
     <link rel="stylesheet" href="{% static 'dwfcommon/style/data-list.css' %}"/>
     <link rel="stylesheet" href="{% static 'dwfcommon/style/pagination.css' %}"/>
+    <link rel="stylesheet" href="{% static 'dwfsearch/style/search_result.css' %}"/>
 {% endblock additional_styles %}
 
 {% block additional_javascript %}
@@ -19,14 +20,27 @@
     <div class="show-image">
         {% for result in search_results %}
             <div id="div-image-{{ result.id }}" class="row {% if forloop.counter != 1 %}d-none{% endif %}">
-                <div class="col col-md-6">
-                    <img src="http://skyservice.pha.jhu.edu/DR14/ImgCutout/getjpeg.aspx?ra={{ result.ra }}&dec={{ result.dec }}&scale=0.25&width=300&height=300&opt=G&query=&Grid=on"/>
+                <div class="col col-md-4">
+                        <img class="rounded float-right" src="http://skyservice.pha.jhu.edu/DR14/ImgCutout/getjpeg.aspx?ra={{ result.ra }}&dec={{ result.dec }}&scale=0.25&width=300&height=300&opt=G&query=&Grid=on"/>
                 </div>
-                <div class="col col-md-6">
-                    <ul>Properties:
+                <div class="col col-md-8">
+                    <div class="prop-header">Properties</div>
+                    <ul>
                         <li>ID = {{ result.id }}</li>
+                        {% if result.field %}<li>Field = {{ result.field }}</li>{% endif %}
+                        {% if result.ccd %}<li>CCD = {{ result.ccd }}</li>{% endif %}
+                        {% if result.mary_run %}<li>Mary Run = {{ result.mary_run }}</li>{% endif %}
+                        {% if result.date %}<li>Date = {{ result.date }}</li>{% endif %}
+                        {% if result.cand_num %}<li>Cand Num = {{ result.cand_num }}</li>{% endif %}
+                        {% if result.mag %}<li>mag = {{ result.mag }}</li>{% endif %}
+                        {% if result.emag %}<li>emag = {{ result.emag }}</li>{% endif %}
+                        {% if result.mjd %}<li>mjd = {{ result.mjd }}</li>{% endif %}
                         <li>RA = {{ result.ra }}</li>
                         <li>Dec = {{ result.dec }}</li>
+                        {% if result.maryID %}<li>Mary ID = {{ result.maryID }}</li>{% endif %}
+                        {% if result.sci_path %}<li class="full-block">sci_path = {{ result.sci_path }}</li>{% endif %}
+                        {% if result.sub_path %}<li class="full-block">sub_path = {{ result.sub_path }}</li>{% endif %}
+                        {% if result.temp_path %}<li class="full-block">temp_path = {{ result.temp_path }}</li>{% endif %}
                     </ul>
                 </div>
             </div>
@@ -48,7 +62,8 @@
                 <tr class="text-dark">
                     {% for key, value in result.items %}
                         {% if forloop.counter == 1 %}
-                            <th scope="col" class="job-name"><a id="link-image-{{ value }}" href="#" class="link-id">{{ value }}</a></th>
+                            <th scope="col" class="job-name"><a id="link-image-{{ value }}" href="#"
+                                                                class="link-id">{{ value }}</a></th>
                         {% else %}
                             <td>{{ value }}</td>
                         {% endif %}
