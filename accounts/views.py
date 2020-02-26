@@ -19,6 +19,7 @@ from .constants import ROLE_CHANGE_REQUESTS_PER_PAGE
 from .decorators import admin_or_system_admin_required
 from .forms.profile import EditProfileForm
 from .forms.registation import RegistrationForm
+from .forms.verify_email import VerifyForm
 from .forms.role_change_request import RoleChangeRequestForm
 from .forms.role_change_request_action import RoleChangeRequestActionForm
 from .models import (
@@ -56,8 +57,8 @@ def registration(request):
 
             # generating verification link
             verification_link = \
-                utility.get_absolute_site_url(request.scheme, request.get_host()) + \
-                '/accounts/verify?code=' + \
+                utility.get_absolute_site_url(request.scheme, request.get_host()) + reverse('verify_account') + \
+                '?code=' + \
                 utility.get_token(
                     information='type=user&username={}'.format(data.get('username')),
                     validity=utility.get_email_verification_expiry(),
@@ -231,46 +232,114 @@ def verify(request):
     :return:
     """
     data = {}
-    code_encrypted = request.GET.get('code', None)
 
-    if code_encrypted:
-        try:
-            # decrypt the code and its parts
-            code = utility.get_information(code_encrypted)
-            params = dict(parse.parse_qsl(code))
-            verify_type = params.get('type', None)
+    if request.method == 'POST':
+        verify_email_form = VerifyForm(request.POST)
 
-            # if the verification is for user email address
-            if verify_type == 'user':
+        if verify_email_form.is_valid():
+            try:
+                # decrypt the code and its parts
+                code = utility.get_information(token=verify_email_form.cleaned_data.get('code', ''), reuse=False)
+                params = dict(parse.parse_qsl(code))
+                verify_type = params.get('type', None)
 
-                # finds username from the retrieved information
-                username = params.get('username', None)
+                # if the verification is for user email address
+                if verify_type == 'user':
 
-                # Update the user
-                try:
-                    user = User.objects.get(username=username)
-                    user.status = user.VERIFIED
-                    user.is_active = True
-                    user.save()
-                    data.update(
-                        success=True,
-                        message='The email address has been verified successfully',
-                    )
-                except User.DoesNotExist:
-                    data.update(
-                        success=False,
-                        message='The requested user account to verify does not exist',
-                    )
-        except ValueError as e:
+                    # finds username from the retrieved information
+                    username = params.get('username', None)
+
+                    # get the user
+                    try:
+                        user = User.objects.get(username=username)
+
+                        user.status = user.VERIFIED
+                        user.is_active = True
+                        user.save()
+
+                        data.update(
+                            success=True,
+                            message='The email address has been verified successfully',
+                        )
+
+                    except User.DoesNotExist:
+                        data.update(
+                            success=False,
+                            message='The requested user account to verify does not exist',
+                        )
+            except ValueError as e:
+                data.update(
+                    success=False,
+                    message=e if e else 'Invalid verification code',
+                )
+
+        else:
             data.update(
                 success=False,
-                message=e if e else 'Invalid verification code',
+                message='Invalid Verification Code/Captcha Failed',
             )
     else:
-        data.update(
-            success=False,
-            message='Invalid Verification Code',
-        )
+
+        code_encrypted = request.GET.get('code', None)
+
+        if code_encrypted:
+            try:
+                # decrypt the code and its parts
+                code = utility.get_information(token=code_encrypted, reuse=True)
+                params = dict(parse.parse_qsl(code))
+                verify_type = params.get('type', None)
+
+                # if the verification is for user email address
+                if verify_type == 'user':
+
+                    # finds username from the retrieved information
+                    username = params.get('username', None)
+
+                    # get the user
+                    try:
+                        user = User.objects.get(
+                            username=username,
+                            is_active=False,
+                            status=User.UNVERIFIED,
+                        )
+
+                        data.update({
+                            'username': user.username,
+                            'first_name': user.first_name,
+                            'last_name': user.last_name,
+                            'email': user.email,
+                        })
+
+                        verify_email_form = VerifyForm()
+
+                        verify_email_form.fields['code'].initial = code_encrypted
+
+                        return render(
+                            request,
+                            "accounts/verify_email.html",
+                            {
+                                'form': verify_email_form,
+                                'submit_text': 'Proceed',
+                                'data': data,
+                            },
+                        )
+
+                    except User.DoesNotExist:
+                        data.update(
+                            success=False,
+                            message='The requested user account to verify does not exist',
+                        )
+
+            except ValueError as e:
+                data.update(
+                    success=False,
+                    message=e if e else 'Invalid verification code',
+                )
+        else:
+            data.update(
+                success=False,
+                message='Invalid Verification Code',
+            )
 
     return render(
         request,

@@ -75,11 +75,11 @@ def get_token(information, validity=None):
         raise
 
 
-def get_information(token):
+def get_information(token, reuse=False):
     """
     Retrieves the information from the database for a particular token
-
     :param token: encoded token from email
+    :param reuse: boolean to determine whether this information will be used again
     :return: the actual information
     """
     now = timezone.localtime(timezone.now())
@@ -88,8 +88,9 @@ def get_information(token):
         if verification.verified:
             raise ValueError('Already verified')
         else:
-            verification.verified = True
-            verification.save()
+            if not reuse:
+                verification.verified = True
+                verification.save()
         return verification.information
     except Verification.DoesNotExist:
         raise ValueError('Invalid or expired verification code')

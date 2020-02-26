@@ -12,7 +12,7 @@ def admin_or_system_admin_required(func):
     :return: Wrap
     """
     def wrap(request, *args, **kwargs):
-        if not request.user.is_admin() or not request.user.is_staff or not request.user.is_superuser:
+        if not request.user.is_admin or not request.user.is_staff or not request.user.is_superuser:
             raise PermissionDenied
         else:
             return func(request, *args, **kwargs)

@@ -1,0 +1,25 @@
+{% extends 'dwfjob/job_base/view_job.html' %}
+{% load template_filters %}
+{% load static %}
+
+{% block input_parameter %}
+    <div class="job-view-section">
+        <div class="row">
+            <div class="col col-md-12">
+                <div class="heading">Input Parameters</div>
+            </div>
+        </div>
+        <div class="body meta-data">
+            <table class="table table-striped">
+                <tbody>
+                {% for parameter_name, parameter_value in mary_job.job_parameters.items %}
+                    <tr>
+                        <th scope="row">{{ parameter_name | display_name}}</th>
+                        <td>{{ parameter_value | display_name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock input_parameter %}

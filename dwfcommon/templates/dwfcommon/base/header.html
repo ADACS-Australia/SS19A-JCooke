@@ -10,6 +10,9 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <ul class="navbar-nav">
                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cone_search' %}">Cone Search</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{% url 'new_job' %}">New Job</a>
                 </li>
                 {% if user.is_authenticated %}
@@ -19,7 +22,6 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownJobsLink">
                             <a class="dropdown-item" href="{% url 'jobs' %}">Launched Jobs</a>
                             <a class="dropdown-item" href="{% url 'drafts' %}">Draft Jobs</a>
-                            <a class="dropdown-item" href="{% url 'deleted_jobs' %}">Deleted Jobs</a>
                         </div>
                     </li>
                     <li class="nav-item">
@@ -57,7 +59,6 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownAdminLink">
                                 <a class="dropdown-item" href="{% url 'all_jobs' %}">All Launched Jobs</a>
                                 <a class="dropdown-item" href="{% url 'all_drafts' %}">All Draft Jobs</a>
-                                <a class="dropdown-item" href="{% url 'all_deleted_jobs' %}">All Deleted Jobs</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{% url 'view_change_role_requests' %}">Role Change Requests</a>
                             </div>

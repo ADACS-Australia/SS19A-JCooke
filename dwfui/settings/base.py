@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_hpc_job_controller',
+    'captcha',
     'dwfjob',
     'dwfsearch',
     'dwfcommon',
@@ -144,6 +146,14 @@ EMAIL_FROM = 'hpc-support@swin.edu.au'
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 
+# update these keys in in local settings or relative environment settings
+RECAPTCHA_PUBLIC_KEY = 'MyRecaptchaKey123'
+RECAPTCHA_PRIVATE_KEY = 'MyRecaptchaPrivateKey456'
+
+RECAPTCHA_DOMAIN = 'www.recaptcha.net'
+
+RECAPTCHA_REQUIRED_SCORE = 0.85
+
 # Customised user model
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -218,3 +228,13 @@ LOGGING = {
         },
     },
 }
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# POSTGRESQL DB CONNECTION CREDENTIALS #
+POSTGRES_USER = 'postgres_username'
+POSTGRES_PASSWORD = 'postgres_password'
+POSTGRES_HOST_NAME = 'postgres_host_name'
+POSTGRES_PORT = 5432
+POSTGRES_DB_NAME = 'postgres_db_name'

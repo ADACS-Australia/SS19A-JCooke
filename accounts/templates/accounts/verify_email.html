@@ -1,0 +1,37 @@
+{% extends 'dwfcommon/base/base.html' %}
+
+{% block page_header %}
+    Verify Email Address - Almost Done
+{% endblock page_header %}
+
+{% block content %}
+    <div class="single-form-wrapper mx-auto">
+        <div class="user-info">
+            You are about to verify the account with the following details in the system.
+        </div>
+        <table class="table">
+            <tbody>
+            <tr >
+                <th scope="row">First Name</th>
+                <td>{{ data.first_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Last Name</th>
+                <td>{{ data.last_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Email</th>
+                <td>{{ data.email }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Username</th>
+                <td>{{ data.username }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="user-info">
+            Please click Proceed if you think that those are correct. Otherwise you can contact the support.
+        </div>
+        {% include 'dwfcommon/snippets/render_form_submit_only.html' %}
+    </div>
+{% endblock content %}

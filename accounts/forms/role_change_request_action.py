@@ -72,7 +72,7 @@ class RoleChangeRequestActionForm(forms.Form):
             raise ValidationError('Invalid status code')
         instance.save()
 
-        if data['action'] in [UserRoleRequest.APPROVED, ]:
+        if int(data['action']) in [UserRoleRequest.APPROVED, ]:
             UserRole.objects.update_or_create(
                 user=instance.user,
                 defaults={
