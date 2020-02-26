@@ -30,6 +30,13 @@ RECAPTCHA_REQUIRED_SCORE = 0.85
 for logger in LOGGING['loggers']:
     LOGGING['loggers'][logger]['handlers'] = ['console', 'file']
 
+# POSTGRESQL DB CONNECTION CREDENTIALS #
+POSTGRES_USER = 'postgres_username'
+POSTGRES_PASSWORD = 'postgres_password'
+POSTGRES_HOST_NAME = 'postgres_host_name'
+POSTGRES_PORT = 5432
+POSTGRES_DB_NAME = 'postgres_db_name'
+
 try:
     from .local import *
 except ImportError:

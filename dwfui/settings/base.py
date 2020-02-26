@@ -231,3 +231,10 @@ LOGGING = {
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# POSTGRESQL DB CONNECTION CREDENTIALS #
+POSTGRES_USER = 'postgres_username'
+POSTGRES_PASSWORD = 'postgres_password'
+POSTGRES_HOST_NAME = 'postgres_host_name'
+POSTGRES_PORT = 5432
+POSTGRES_DB_NAME = 'postgres_db_name'

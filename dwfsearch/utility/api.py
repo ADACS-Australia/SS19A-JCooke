@@ -1,93 +1,120 @@
 """
 Distributed under the MIT License. See LICENSE.txt for more info.
 """
-import json
+
+import logging
+import astropy.units as u
+
+from astropy.coordinates import SkyCoord
+from psycopg2 import sql
+from psycopg2.extras import RealDictCursor
+
+from .dwfdb import DWFDB
+
+logger = logging.getLogger(__name__)
 
 
-def search(query_parts, search_columns):
-    search_results = [
-        {
-            'id': '1',
-            'name': 'name 1',
-            'ra': '01:01:01',
-            'dec': '1',
-        },
-        {
-            'id': '2',
-            'name': 'name 2',
-            'ra': '02:02:02',
-            'dec': '2',
-        },
-        {
-            'id': '3',
-            'name': 'name 3',
-            'ra': '03:03:03',
-            'dec': '3',
-        },
-        {
-            'id': '4',
-            'name': 'name 4',
-            'ra': '04:04:04',
-            'dec': '4',
-        },
-        {
-            'id': '5',
-            'name': 'name 5',
-            'ra': '05:05:05',
-            'dec': '5',
-        },
-        {
-            'id': '6',
-            'name': 'name 6',
-            'ra': '06:06:06',
-            'dec': '6',
-        },
-        {
-            'id': '7',
-            'name': 'name 7',
-            'ra': '07:07:07',
-            'dec': '7',
-        },
-        {
-            'id': '8',
-            'name': 'name 8',
-            'ra': '08:08:08',
-            'dec': '8',
-        },
-        {
-            'id': '9',
-            'name': 'name 9',
-            'ra': '09:09:09',
-            'dec': '9',
-        },
-        {
-            'id': '10',
-            'name': 'name 10',
-            'ra': '10:10:10',
-            'dec': '10',
-        },
-        {
-            'id': '11',
-            'name': 'name 11',
-            'ra': '11:11:11',
-            'dec': '11',
-        },
-        {
-            'id': '12',
-            'name': 'name 12',
-            'ra': '12:12:12',
-            'dec': '12',
-        }
-    ]
+def search(query_parts, search_columns, limit, offset):
+    ra = query_parts.get('ra').split(':')
+    dec = float(query_parts.get('dec'))
+    radius = query_parts.get('radius')
+    target_name = query_parts.get('target_name', None)
+    mary_run = query_parts.get('mary_id', None)
 
-    data = {
-        'total': len(search_results),
-        'search_results': search_results,
-    }
+    order_by_field = 'id'
+    order_by_direction = 'ASC'
 
-    # this will come from the api
-    json_response = json.dumps(data)
+    c = SkyCoord(
+        '{}h{}m{}s'.format(ra[0], ra[1], ra[2]),
+        dec*u.degree,
+        frame='icrs',
+    )
 
-    json_data = json.loads(json_response)
+    if mary_run:
+        mary_run_min = int(mary_run)
+        mary_run_max = int(mary_run)
+    else:
+        mary_run_min = -2147483648
+        mary_run_max = 2147483647
 
-    return json_data.get('search_results'), json_data.get('total')
+    search_results = None
+    total = 0
+    with DWFDB() as db_connection:
+        with db_connection.cursor(cursor_factory=RealDictCursor) as cursor:
+            try:
+                sql_str = sql.SQL(
+                    "SELECT {} "
+                    "FROM dwf "
+                    "WHERE "
+                    "(spoint(radians(dwf.ra),radians(dwf.dec)) @ scircle(spoint(radians({}),radians({})),radians({}))) "
+                    "AND mary_run BETWEEN {} AND {} "
+                    "AND sci_path LIKE {} "
+                    "ORDER BY {} "
+                    "LIMIT {} "
+                    "OFFSET {} "
+                ).format(
+                    sql.SQL(",").join(map(sql.Identifier, search_columns)),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.SQL(" ").join([sql.Identifier(order_by_field), sql.SQL(order_by_direction)]),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                )
+
+                cursor.execute(
+                    sql_str,
+                    [
+                        c.ra.deg,
+                        c.dec.deg,
+                        radius,
+                        mary_run_min,
+                        mary_run_max,
+                        '%{}%'.format(target_name),
+                        limit,
+                        offset
+                    ]
+                )
+                search_results = cursor.fetchall()
+
+            except Exception as ex:
+                logger.log("Exception: ", ex)
+
+            try:
+                total_str = sql.SQL(
+                    "SELECT COUNT(*) total "
+                    "FROM dwf "
+                    "WHERE "
+                    "(spoint(radians(dwf.ra),radians(dwf.dec)) @ scircle(spoint(radians({}),radians({})),radians({}))) "
+                    "AND mary_run BETWEEN {} AND {} "
+                    "AND sci_path LIKE {} "
+                ).format(
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                    sql.Placeholder(),
+                )
+
+                cursor.execute(
+                    total_str,
+                    [
+                        c.ra.deg,
+                        c.dec.deg,
+                        radius,
+                        mary_run_min,
+                        mary_run_max,
+                        '%{}%'.format(target_name),
+                    ]
+                )
+
+                total = cursor.fetchone().get('total', 0)
+
+            except Exception as ex:
+                logger.log("Exception: ", ex)
+
+    return search_results, total
