@@ -4,11 +4,9 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-astropy==4.0
 django-recaptcha==2.0.5
-django==2.2.1
+django==2.2.10
 mysqlclient==1.4.2.post1
-numpy==1.18.1             # via astropy
 psycopg2==2.8.4
 pytz==2019.1              # via django
 six==1.12.0
