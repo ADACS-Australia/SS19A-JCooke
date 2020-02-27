@@ -3,9 +3,7 @@ Distributed under the MIT License. See LICENSE.txt for more info.
 """
 
 import logging
-import astropy.units as u
 
-from astropy.coordinates import SkyCoord
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 
@@ -15,20 +13,16 @@ logger = logging.getLogger(__name__)
 
 
 def search(query_parts, search_columns, limit, offset):
-    ra = query_parts.get('ra').split(':')
+    ra = float(query_parts.get('ra'))
     dec = float(query_parts.get('dec'))
-    radius = query_parts.get('radius')
+    radius = float(query_parts.get('radius')) / 3600
     target_name = query_parts.get('target_name', None)
     mary_run = query_parts.get('mary_id', None)
 
     order_by_field = 'id'
     order_by_direction = 'ASC'
 
-    c = SkyCoord(
-        '{}h{}m{}s'.format(ra[0], ra[1], ra[2]),
-        dec*u.degree,
-        frame='icrs',
-    )
+    print(ra, dec, radius)
 
     if mary_run:
         mary_run_min = int(mary_run)
@@ -68,8 +62,8 @@ def search(query_parts, search_columns, limit, offset):
                 cursor.execute(
                     sql_str,
                     [
-                        c.ra.deg,
-                        c.dec.deg,
+                        ra,
+                        dec,
                         radius,
                         mary_run_min,
                         mary_run_max,
@@ -103,8 +97,8 @@ def search(query_parts, search_columns, limit, offset):
                 cursor.execute(
                     total_str,
                     [
-                        c.ra.deg,
-                        c.dec.deg,
+                        ra,
+                        dec,
                         radius,
                         mary_run_min,
                         mary_run_max,

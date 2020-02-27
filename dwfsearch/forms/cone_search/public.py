@@ -12,11 +12,11 @@ class ConeSearchForm(forms.Form):
     Form to performing cone search
     """
 
-    ra = forms.CharField(
-        widget=forms.TextInput(
+    ra = forms.FloatField(
+        widget=forms.NumberInput(
             attrs={'class': 'form-control', 'tabindex': '1'}
         ),
-        label=_('RA (HH:MM:SS)'),
+        label=_('RA (degrees)'),
         required=True,
     )
 
@@ -32,7 +32,7 @@ class ConeSearchForm(forms.Form):
         widget=forms.NumberInput(
             attrs={'class': 'form-control', 'tabindex': '3'}
         ),
-        label=_('Search Radius (0-90)'),
+        label=_('Search Radius (arcsecond)'),
         required=True,
     )
 
@@ -49,22 +49,10 @@ class ConeSearchForm(forms.Form):
         super(ConeSearchForm, self).__init__(*args, **kwargs)
 
     def clean_ra(self):
-        ra = self.cleaned_data.get('ra').split(':')
+        ra = self.cleaned_data.get('ra')
 
-        try:
-            if not 0 <= int(ra[0]) <= 23 or not 0 <= int(ra[1]) <= 59 or not 0 <= int(ra[2]) <= 59:
-                raise ValidationError(_('RA out of range [0:0:0, 23:59:59]'))
-        except (ValueError, TypeError):
-            raise ValidationError(_('RA invalid'))
-
-    # def clean_dec(self):
-    #     dec = self.cleaned_data.get('dec').split(':')
-    #
-    #     try:
-    #         if not 0 <= int(dec[0]) <= 23 or not 0 <= int(dec[1]) <= 59 or not 0 <= int(dec[2]) <= 59:
-    #             raise ValidationError(_('DEC out of range [0:0:0, 23:59:59]'))
-    #     except (ValueError, TypeError):
-    #         raise ValidationError(_('DEC invalid'))
+        if not 0 <= ra <= 360:
+            raise ValidationError(_('RA out of range [0, +360]'))
 
     def clean_dec(self):
         dec = self.cleaned_data.get('dec')
@@ -75,8 +63,8 @@ class ConeSearchForm(forms.Form):
     def clean_radius(self):
         radius = self.cleaned_data.get('radius')
 
-        if not 0 <= radius <= 90:
-            raise ValidationError(_('Radius out of range [0, 90]'))
+        if not 0 <= radius:
+            raise ValidationError(_('Radius must be non-negative'))
 
     def get_search_query(self):
         query_parts = dict()
