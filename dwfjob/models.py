@@ -104,10 +104,12 @@ class JobParameter(models.Model):
 
     RT = 'rt'
     NOAO = 'NOAO'
+    LT = 'lt'
 
     MARY_SEED_NAME_CHOICES = [
         (RT, RT),
         (NOAO, NOAO),
+        (LT, LT),
     ]
 
     mary_seed_name = models.CharField(max_length=20, choices=MARY_SEED_NAME_CHOICES, blank=False, null=False,
@@ -126,19 +128,25 @@ class JobParameter(models.Model):
     clobber = models.CharField(max_length=20, choices=CLOBBER_CHOICES, blank=False, null=False, default=FALSE)
 
     U_BAND = 'u Band'
+    U_BAND_VALUE = 'u'
     G_BAND = 'g Band'
+    G_BAND_VALUE = 'g'
     R_BAND = 'r Band'
+    R_BAND_VALUE = 'r'
     I_BAND = 'i Band'
+    I_BAND_VALUE = 'i'
     Z_BAND = 'z Band'
+    Z_BAND_VALUE = 'z'
     Y_BAND = 'Y Band'
+    Y_BAND_VALUE = 'Y'
 
     FILTER_CHOICES = [
-        (U_BAND, U_BAND),
-        (G_BAND, G_BAND),
-        (R_BAND, R_BAND),
-        (I_BAND, I_BAND),
-        (Z_BAND, Z_BAND),
-        (Y_BAND, Y_BAND),
+        (U_BAND_VALUE, U_BAND),
+        (G_BAND_VALUE, G_BAND),
+        (R_BAND_VALUE, R_BAND),
+        (I_BAND_VALUE, I_BAND),
+        (Z_BAND_VALUE, Z_BAND),
+        (Y_BAND_VALUE, Y_BAND),
     ]
 
     filter = models.CharField(max_length=20, choices=FILTER_CHOICES, blank=False, null=False, default=G_BAND)

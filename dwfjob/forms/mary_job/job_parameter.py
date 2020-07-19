@@ -38,8 +38,9 @@ LABELS = {
     'old_template_name': _('Name of old template (downloaded from NOAO portal)'),
     'mary_run_template': _('Date of mary template'),
     'mary_run_template_sequence_number': _('Sequence number of previous mary run'),
-    'image_names': _('6 digit code in the NOAO name'),
-    'run_dates': _('Run dates'),
+    'image_names': _('6 digit code in the NOAO name for images'),
+    'run_dates': _('Run dates (enter all dates of the current DWF run. Eg if it is the 2nd day of the run you will '
+                   'have two dates in here)'),
     'template_images': _('Template images'),
     'last_mary_run': _('Last mary run'),
 }
@@ -95,7 +96,7 @@ class JobParameterForm(forms.ModelForm):
         self.fields['field'].widget.attrs.update({'for_template': 'old new make'})
         self.fields['date'].widget.attrs.update({'for_template': 'old new make'})
         self.fields['template'].widget.attrs.update({'for_template': 'old new make'})
-        self.fields['template_date'].widget.attrs.update({'for_template': 'old'})
+        self.fields['template_date'].widget.attrs.update({'for_template': 'new'})
         self.fields['mary_seed_name'].widget.attrs.update({'for_template': 'old new make'})
         self.fields['steps'].widget.attrs.update({'for_template': 'old new make'})
         self.fields['clobber'].widget.attrs.update({'for_template': 'old new make'})
