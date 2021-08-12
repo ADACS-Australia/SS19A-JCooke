@@ -38,7 +38,7 @@ LABELS = {
     'old_template_name': _('Name of old template (downloaded from NOAO portal)'),
     'mary_run_template': _('Date of mary template'),
     'mary_run_template_sequence_number': _('Sequence number of previous mary run'),
-    'image_names': _('6 digit code in the NOAO name for images'),
+    'image_names': _('6/7 digit code in the NOAO name for images'),
     'run_dates': _('Run dates (enter all dates of the current DWF run. Eg if it is the 2nd day of the run you will '
                    'have two dates in here)'),
     'template_images': _('Template images'),
