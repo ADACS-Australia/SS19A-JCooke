@@ -159,8 +159,8 @@ class JobParameter(models.Model):
 
     image_names = models.CharField(max_length=2048, blank=False, null=False, validators=[
         RegexValidator(
-            regex='^[0-9]{6}(\s*,\s*[0-9]{6})*$',
-            message='Must be comma separated 6 digit codes',
+            regex='^(\d{6}|\d{7})(\s*,\s*(\d{6}|\d{7}))*$',
+            message='Must be comma separated 6/7 digit codes',
             code='invalid_image_names',
         )
     ])
