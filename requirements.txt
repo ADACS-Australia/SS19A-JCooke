@@ -4,10 +4,19 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
+django==2.2.27
+    # via
+    #   -r requirements.in
+    #   django-recaptcha
 django-recaptcha==2.0.5
-django==2.2.10
+    # via -r requirements.in
 mysqlclient==1.4.2.post1
+    # via -r requirements.in
 psycopg2==2.8.4
-pytz==2019.1              # via django
+    # via -r requirements.in
+pytz==2019.1
+    # via django
 six==1.12.0
-sqlparse==0.3.0           # via django
+    # via -r requirements.in
+sqlparse==0.3.0
+    # via django
